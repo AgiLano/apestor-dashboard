@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
@@ -29,19 +30,15 @@ export default function LoginPage() {
       return;
     }
 
-    alert("Login berhasil!");
-
     router.push("/admin");
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center p-5">
+    <main className="min-h-screen bg-black flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
         <h1 className="text-4xl font-bold text-yellow-400 mb-2">ADMIN LOGIN</h1>
 
-        <p className="text-zinc-400 mb-8">
-          Login untuk masuk ke dashboard admin
-        </p>
+        <p className="text-zinc-400 mb-8">Login untuk masuk ke admin panel</p>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <input
@@ -49,18 +46,26 @@ export default function LoginPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-xl p-4 text-white"
-            required
+            className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-4 text-white"
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-xl p-4 text-white"
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-4 text-white pr-14"
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+            >
+              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+            </button>
+          </div>
 
           <button
             type="submit"
