@@ -19,3 +19,42 @@ select,
 textarea {
   font-family: inherit;
 }
+
+.react-datepicker {
+  background-color: #111111 !important;
+  border: 1px solid #27272a !important;
+  color: white !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background-color: #18181b !important;
+  border-bottom: 1px solid #27272a !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #facc15 !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: white !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #27272a !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: #facc15 !important;
+  color: black !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #facc15 !important;
+}

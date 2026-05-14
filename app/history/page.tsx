@@ -137,7 +137,13 @@ export default function HistoryPage() {
   function formatDate(date: string) {
     if (!date) return "-";
 
-    return new Date(date).toLocaleDateString("id-ID", {
+    const parsedDate = new Date(date);
+
+    if (isNaN(parsedDate.getTime())) {
+      return "-";
+    }
+
+    return parsedDate.toLocaleDateString("id-ID", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -178,13 +184,32 @@ export default function HistoryPage() {
     autoTable(doc, {
       startY: 80,
 
-      head: [["Date", "Emiten", "Type", "AVG", "TP", "Profit", "Status"]],
+      head: [
+        ["Date", "Emiten", "Type", "AVG", "Timeline", "TP", "Profit", "Status"],
+      ],
 
       body: filteredSignals.map((signal) => [
         formatDate(signal.tanggal_signal),
         signal.emiten,
         signal.trading_type,
         signal.avg || "-",
+        [
+          signal.entry_1
+            ? `E1 ${signal.entry_1} (${formatDate(signal.entry_1_date)})`
+            : null,
+
+          signal.entry_2 && Number(signal.entry_2) > 0
+            ? `E2 ${signal.entry_2} (${formatDate(signal.entry_2_date)})`
+            : null,
+
+          signal.entry_3 && Number(signal.entry_3) > 0
+            ? `E3 ${signal.entry_3} (${formatDate(signal.entry_3_date)})`
+            : null,
+
+          signal.done_date ? `DONE (${formatDate(signal.done_date)})` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
         signal.trading_type === "SWING" ? signal.tp_1 || "-" : signal.tp || "-",
         `${signal.profit_percentage || 0}%`,
         signal.status,
@@ -420,6 +445,8 @@ export default function HistoryPage() {
 
                   <th className="p-5 text-left">AVG</th>
 
+                  <th className="p-5 text-left">Timeline</th>
+
                   <th className="p-5 text-left">TP</th>
 
                   <th className="p-5 text-left">Profit</th>
@@ -440,6 +467,74 @@ export default function HistoryPage() {
                     <td className="p-5">{signal.trading_type}</td>
 
                     <td className="p-5">{signal.avg || "-"}</td>
+
+                    <td className="p-5">
+                      <div className="space-y-3 text-sm">
+                        {/* ENTRY 1 */}
+                        {Number(signal.entry_1) > 0 && (
+                          <div className="bg-zinc-800 rounded-2xl p-3">
+                            <p className="text-yellow-400 font-bold">ENTRY 1</p>
+
+                            <p className="text-white font-semibold">
+                              {signal.entry_1}
+                            </p>
+
+                            <p className="text-zinc-400 text-xs mt-1">
+                              {signal.entry_1_date
+                                ? formatDate(signal.entry_1_date)
+                                : "-"}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* ENTRY 2 */}
+                        {Number(signal.entry_2) > 0 && (
+                          <div className="bg-zinc-800 rounded-2xl p-3">
+                            <p className="text-blue-400 font-bold">ENTRY 2</p>
+
+                            <p className="text-white font-semibold">
+                              {signal.entry_2}
+                            </p>
+
+                            <p className="text-zinc-400 text-xs mt-1">
+                              {signal.entry_2_date
+                                ? formatDate(signal.entry_2_date)
+                                : "-"}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* ENTRY 3 */}
+                        {Number(signal.entry_3) > 0 && (
+                          <div className="bg-zinc-800 rounded-2xl p-3">
+                            <p className="text-purple-400 font-bold">ENTRY 3</p>
+
+                            <p className="text-white font-semibold">
+                              {signal.entry_3}
+                            </p>
+
+                            <p className="text-zinc-400 text-xs mt-1">
+                              {signal.entry_3_date
+                                ? formatDate(signal.entry_3_date)
+                                : "-"}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* DONE */}
+                        {signal.done_date && (
+                          <div className="bg-green-500/10 border border-green-500 rounded-2xl p-3">
+                            <p className="text-green-400 font-bold">DONE</p>
+
+                            <p className="text-zinc-300 text-xs mt-1">
+                              {signal.done_date
+                                ? formatDate(signal.done_date)
+                                : "-"}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </td>
 
                     <td className="p-5">
                       {signal.trading_type === "SWING"

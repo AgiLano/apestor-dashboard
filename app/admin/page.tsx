@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -36,9 +38,19 @@ export default function AdminPage() {
 
   const [entry1, setEntry1] = useState("");
 
+  const [signalDate, setSignalDate] = useState<Date | null>(new Date());
+
+  const [entry1Date, setEntry1Date] = useState<Date | null>(new Date());
+
   const [entry2, setEntry2] = useState("");
 
+  const [entry2Date, setEntry2Date] = useState<Date | null>(new Date());
+
   const [entry3, setEntry3] = useState("");
+
+  const [entry3Date, setEntry3Date] = useState<Date | null>(new Date());
+
+  const [doneDate, setDoneDate] = useState<Date | null>(new Date());
 
   const [avg, setAvg] = useState("");
 
@@ -183,13 +195,20 @@ export default function AdminPage() {
     setLoading(true);
 
     const payload = {
+      tanggal_signal: signalDate
+        ? signalDate.toISOString().split("T")[0]
+        : null,
       emiten: emiten.toUpperCase(),
 
       trading_type: tradingType,
+      entry_1: entry1 ? Number(entry1) : null,
+      entry_1_date: entry1Date ? entry1Date.toISOString().split("T")[0] : null,
 
-      entry_1: Number(entry1),
-      entry_2: Number(entry2),
-      entry_3: Number(entry3),
+      entry_2: entry2 ? Number(entry2) : null,
+      entry_2_date: entry2Date ? entry2Date.toISOString().split("T")[0] : null,
+
+      entry_3: entry3 ? Number(entry3) : null,
+      entry_3_date: entry3Date ? entry3Date.toISOString().split("T")[0] : null,
 
       avg: Number(avg),
 
@@ -202,6 +221,11 @@ export default function AdminPage() {
       tp_3: tradingType === "SWING" ? Number(tp3) : null,
 
       status,
+
+      done_date:
+        status === "DONE" && doneDate
+          ? doneDate.toISOString().split("T")[0]
+          : null,
 
       high_price: Number(highPrice),
 
@@ -229,7 +253,6 @@ export default function AdminPage() {
     else {
       const response = await supabase.from("signals").insert([
         {
-          tanggal_signal: new Date(),
           ...payload,
         },
       ]);
@@ -395,8 +418,21 @@ export default function AdminPage() {
             <option value="SWING">SWING</option>
           </select>
 
-          {/* ENTRY */}
-          <div className="grid md:grid-cols-3 gap-4">
+          {/* SIGNAL DATE */}
+          <div className="mb-4">
+            <p className="text-zinc-400 mb-2">Signal Date</p>
+
+            <DatePicker
+              selected={signalDate}
+              onChange={(date: Date | null) => setSignalDate(date)}
+              dateFormat="EEEE, d MMMM yyyy"
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              placeholderText="Pilih tanggal signal"
+            />
+          </div>
+
+          {/* ENTRY 1 */}
+          <div className="grid md:grid-cols-2 gap-4">
             <input
               type="number"
               placeholder="Entry 1"
@@ -405,6 +441,17 @@ export default function AdminPage() {
               className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
             />
 
+            <DatePicker
+              selected={entry1Date}
+              onChange={(date: Date | null) => setEntry1Date(date)}
+              dateFormat="EEEE, d MMMM yyyy"
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              placeholderText="Pilih tanggal"
+            />
+          </div>
+
+          {/* ENTRY 2 */}
+          <div className="grid md:grid-cols-2 gap-4">
             <input
               type="number"
               placeholder="Entry 2"
@@ -413,12 +460,31 @@ export default function AdminPage() {
               className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
             />
 
+            <DatePicker
+              selected={entry2Date}
+              onChange={(date: Date | null) => setEntry2Date(date)}
+              dateFormat="EEEE, d MMMM yyyy"
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              placeholderText="Pilih tanggal"
+            />
+          </div>
+
+          {/* ENTRY 3 */}
+          <div className="grid md:grid-cols-2 gap-4">
             <input
               type="number"
               placeholder="Entry 3"
               value={entry3}
               onChange={(e) => setEntry3(e.target.value)}
               className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            />
+
+            <DatePicker
+              selected={entry3Date}
+              onChange={(date: Date | null) => setEntry3Date(date)}
+              dateFormat="EEEE, d MMMM yyyy"
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              placeholderText="Pilih tanggal"
             />
           </div>
 
@@ -483,6 +549,16 @@ export default function AdminPage() {
 
             <option value="DONE">DONE</option>
           </select>
+
+          {status === "DONE" && (
+            <DatePicker
+              selected={doneDate}
+              onChange={(date: Date | null) => setDoneDate(date)}
+              dateFormat="EEEE, d MMMM yyyy"
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              placeholderText="Pilih tanggal DONE"
+            />
+          )}
 
           {/* HIGH PRICE */}
           <input
@@ -666,11 +742,41 @@ export default function AdminPage() {
 
                             setTradingType(signal.trading_type || "");
 
+                            setSignalDate(
+                              signal.tanggal_signal
+                                ? new Date(signal.tanggal_signal)
+                                : null,
+                            );
+
                             setEntry1(signal.entry_1?.toString() || "");
 
                             setEntry2(signal.entry_2?.toString() || "");
 
                             setEntry3(signal.entry_3?.toString() || "");
+
+                            setEntry1Date(
+                              signal.entry_1_date
+                                ? new Date(signal.entry_1_date)
+                                : null,
+                            );
+
+                            setEntry2Date(
+                              signal.entry_2_date
+                                ? new Date(signal.entry_2_date)
+                                : null,
+                            );
+
+                            setEntry3Date(
+                              signal.entry_3_date
+                                ? new Date(signal.entry_3_date)
+                                : null,
+                            );
+
+                            setDoneDate(
+                              signal.done_date
+                                ? new Date(signal.done_date)
+                                : null,
+                            );
 
                             setAvg(signal.avg?.toString() || "");
 
