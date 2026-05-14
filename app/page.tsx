@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { supabase } from "../lib/supabase";
 
+import { toast } from "sonner";
+
 import {
   LineChart,
   Line,
@@ -71,7 +73,26 @@ export default function Home() {
           schema: "public",
           table: "signals",
         },
-        () => {
+        (payload: any) => {
+          // NOTIFICATION INSERT
+          if (payload.eventType === "INSERT") {
+            toast.success("Signal Baru!", {
+              description: `${payload.new.emiten} - ${payload.new.trading_type}`,
+            });
+          }
+
+          // NOTIFICATION UPDATE
+          if (payload.eventType === "UPDATE") {
+            toast.info("Signal Updated", {
+              description: `${payload.new.emiten} berhasil diperbarui`,
+            });
+          }
+
+          // NOTIFICATION DELETE
+          if (payload.eventType === "DELETE") {
+            toast.error("Signal Deleted");
+          }
+
           getSignals();
         },
       )

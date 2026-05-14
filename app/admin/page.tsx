@@ -1,88 +1,720 @@
 "use client";
 
-import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+import Navbar from "@/components/Navbar";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { supabase } from "../../lib/supabase";
+import toast from "react-hot-toast";
 
-export default function LoginPage() {
+export default function AdminPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // =========================
+  // AUTH
+  // =========================
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // =========================
+  // SIGNAL STATE
+  // =========================
+
+  const [signals, setSignals] = useState<any[]>([]);
+
+  const [search, setSearch] = useState("");
+
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
+  const [typeFilter, setTypeFilter] = useState("ALL");
+  // =========================
+  // FORM STATE
+  // =========================
+
+  const [emiten, setEmiten] = useState("");
+
+  const [tradingType, setTradingType] = useState("");
+
+  const [entry1, setEntry1] = useState("");
+
+  const [entry2, setEntry2] = useState("");
+
+  const [entry3, setEntry3] = useState("");
+
+  const [avg, setAvg] = useState("");
+
+  const [tp, setTp] = useState("");
+
+  const [tp1, setTp1] = useState("");
+
+  const [tp2, setTp2] = useState("");
+
+  const [tp3, setTp3] = useState("");
+
+  const [status, setStatus] = useState("RUNNING");
+
+  const [highPrice, setHighPrice] = useState("");
+
+  const [profitPercentage, setProfitPercentage] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  // =========================
+  // AUTH CHECK
+  // =========================
+
+  useEffect(() => {
+    async function checkUser() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        router.push("/login");
+        return;
+      }
+
+      setCheckingAuth(false);
+    }
+
+    checkUser();
+  }, [router]);
+
+  // =========================
+  // GET SIGNALS
+  // =========================
+
+  async function getSignals() {
+    const { data } = await supabase
+      .from("signals")
+      .select("*")
+      .order("tanggal_signal", {
+        ascending: false,
+      });
+
+    setSignals(data || []);
+  }
+
+  // =========================
+  // REALTIME
+  // =========================
+
+  useEffect(() => {
+    getSignals();
+
+    const channel = supabase
+      .channel("admin-signals")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "signals",
+        },
+        () => {
+          getSignals();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // =========================
+  // AUTO AVG
+  // =========================
+
+  useEffect(() => {
+    const numbers = [
+      Number(entry1 || 0),
+      Number(entry2 || 0),
+      Number(entry3 || 0),
+    ].filter((n) => n > 0);
+
+    if (numbers.length > 0) {
+      const total = numbers.reduce((a, b) => a + b, 0);
+
+      setAvg((total / numbers.length).toFixed(2));
+    } else {
+      setAvg("");
+    }
+  }, [entry1, entry2, entry3]);
+
+  // =========================
+  // AUTO PROFIT
+  // =========================
+
+  useEffect(() => {
+    if (!avg) {
+      setProfitPercentage("");
+      return;
+    }
+
+    let targetTP = 0;
+
+    if (tradingType === "SWING") {
+      targetTP = Number(tp1 || 0);
+    } else {
+      targetTP = Number(tp || 0);
+    }
+
+    if (targetTP > 0) {
+      const result = ((targetTP - Number(avg)) / Number(avg)) * 100;
+
+      setProfitPercentage(result.toFixed(2));
+    } else {
+      setProfitPercentage("");
+    }
+  }, [avg, tp, tp1, tradingType]);
+
+  // =========================
+  // SAVE SIGNAL
+  // =========================
+
+  async function saveSignal() {
+    if (!emiten || !tradingType) {
+      toast.error("Lengkapi data terlebih dahulu!");
+      return;
+    }
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const payload = {
+      emiten: emiten.toUpperCase(),
+
+      trading_type: tradingType,
+
+      entry_1: Number(entry1),
+      entry_2: Number(entry2),
+      entry_3: Number(entry3),
+
+      avg: Number(avg),
+
+      tp: tradingType === "SWING" ? null : Number(tp),
+
+      tp_1: tradingType === "SWING" ? Number(tp1) : null,
+
+      tp_2: tradingType === "SWING" ? Number(tp2) : null,
+
+      tp_3: tradingType === "SWING" ? Number(tp3) : null,
+
+      status,
+
+      high_price: Number(highPrice),
+
+      profit_percentage: Number(profitPercentage),
+    };
+
+    let error = null;
+
+    // =========================
+    // UPDATE
+    // =========================
+
+    if (editingId) {
+      const response = await supabase
+        .from("signals")
+        .update(payload)
+        .eq("id", editingId);
+
+      error = response.error;
+    }
+
+    // =========================
+    // INSERT
+    // =========================
+    else {
+      const response = await supabase.from("signals").insert([
+        {
+          tanggal_signal: new Date(),
+          ...payload,
+        },
+      ]);
+
+      error = response.error;
+    }
 
     setLoading(false);
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
 
-    router.push("/admin");
+    toast.success(
+      editingId ? "Signal berhasil diupdate!" : "Signal berhasil disimpan!",
+    );
+
+    // RESET
+    setEditingId(null);
+
+    setEmiten("");
+    setTradingType("");
+
+    setEntry1("");
+    setEntry2("");
+    setEntry3("");
+
+    setAvg("");
+
+    setTp("");
+    setTp1("");
+    setTp2("");
+    setTp3("");
+
+    setStatus("RUNNING");
+
+    setHighPrice("");
+
+    setProfitPercentage("");
+  }
+  // =========================
+  // DELETE SIGNAL
+  // =========================
+
+  async function deleteSignal(id: number) {
+    const confirmDelete = confirm("Yakin ingin menghapus signal ini?");
+
+    if (!confirmDelete) return;
+
+    const { error } = await supabase.from("signals").delete().eq("id", id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("Signal berhasil dihapus!");
+  }
+
+  // =========================
+  // FORMAT DATE
+  // =========================
+
+  // =========================
+  // FILTERED SIGNALS
+  // =========================
+
+  const filteredSignals = signals.filter((signal) => {
+    const cocokSearch = signal.emiten
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
+    const cocokStatus =
+      statusFilter === "ALL" ? true : signal.status === statusFilter;
+
+    const cocokType =
+      typeFilter === "ALL" ? true : signal.trading_type === typeFilter;
+
+    return cocokSearch && cocokStatus && cocokType;
+  });
+
+  function formatDate(date: string) {
+    if (!date) return "-";
+
+    return new Date(date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  // =========================
+  // LOADING
+  // =========================
+
+  if (checkingAuth) {
+    return (
+      <main className="min-h-screen bg-black flex items-center justify-center text-white">
+        <h1 className="text-3xl font-bold">Loading...</h1>
+      </main>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center px-5">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
-        <h1 className="text-4xl font-bold text-yellow-400 mb-2">ADMIN LOGIN</h1>
+    <>
+      <Navbar />
 
-        <p className="text-zinc-400 mb-8">Login untuk mengakses admin panel</p>
+      <main className="min-h-screen bg-black text-white p-5 md:p-10">
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
+          <div>
+            <h1 className="text-4xl md:text-6xl font-black text-yellow-400">
+              ADMIN PANEL
+            </h1>
 
-        <form onSubmit={handleLogin} className="space-y-5">
-          {/* EMAIL */}
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 text-white outline-none"
-            required
-          />
-
-          {/* PASSWORD */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 pr-14 text-white outline-none"
-              required
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
-            >
-              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-            </button>
+            <p className="text-zinc-400 mt-2 text-lg">
+              Kelola signal trading APESTOR
+            </p>
           </div>
 
-          {/* BUTTON */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-yellow-400 hover:bg-yellow-300 transition-all text-black font-bold py-4 rounded-2xl"
+          <div className="flex gap-4">
+            <button
+              onClick={async () => {
+                await supabase.auth.signOut();
+
+                router.push("/login");
+              }}
+              className="bg-red-500 hover:bg-red-400 transition px-6 py-3 rounded-2xl font-bold"
+            >
+              LOGOUT
+            </button>
+          </div>
+        </div>
+
+        {/* FORM */}
+        <div className="max-w-4xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 md:p-8 space-y-5 mb-10">
+          {/* EMITEN */}
+          <input
+            type="text"
+            placeholder="Emiten"
+            value={emiten}
+            onChange={(e) => setEmiten(e.target.value)}
+            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+          />
+
+          {/* TRADING TYPE */}
+          <select
+            value={tradingType}
+            onChange={(e) => setTradingType(e.target.value)}
+            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
           >
-            {loading ? "Loading..." : "LOGIN"}
+            <option value="">Pilih Trading Type</option>
+
+            <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+
+            <option value="BSJC">BSJC</option>
+
+            <option value="LIVE TRADE">LIVE TRADE</option>
+
+            <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+
+            <option value="SWING">SWING</option>
+          </select>
+
+          {/* ENTRY */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <input
+              type="number"
+              placeholder="Entry 1"
+              value={entry1}
+              onChange={(e) => setEntry1(e.target.value)}
+              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            />
+
+            <input
+              type="number"
+              placeholder="Entry 2"
+              value={entry2}
+              onChange={(e) => setEntry2(e.target.value)}
+              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            />
+
+            <input
+              type="number"
+              placeholder="Entry 3"
+              value={entry3}
+              onChange={(e) => setEntry3(e.target.value)}
+              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            />
+          </div>
+
+          {/* AVG */}
+          <div>
+            <label className="block text-zinc-400 mb-2 font-semibold">
+              AVG (AUTO)
+            </label>
+
+            <div className="w-full bg-blue-500/10 border border-blue-500 text-blue-400 rounded-2xl p-4 font-bold text-xl">
+              {avg || "0"}
+            </div>
+          </div>
+
+          {/* TP */}
+          {tradingType !== "SWING" && (
+            <input
+              type="number"
+              placeholder="TP"
+              value={tp}
+              onChange={(e) => setTp(e.target.value)}
+              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            />
+          )}
+
+          {/* SWING */}
+          {tradingType === "SWING" && (
+            <div className="grid md:grid-cols-3 gap-4">
+              <input
+                type="number"
+                placeholder="TP 1"
+                value={tp1}
+                onChange={(e) => setTp1(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              />
+
+              <input
+                type="number"
+                placeholder="TP 2"
+                value={tp2}
+                onChange={(e) => setTp2(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              />
+
+              <input
+                type="number"
+                placeholder="TP 3"
+                value={tp3}
+                onChange={(e) => setTp3(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              />
+            </div>
+          )}
+
+          {/* STATUS */}
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+          >
+            <option value="RUNNING">RUNNING</option>
+
+            <option value="DONE">DONE</option>
+          </select>
+
+          {/* HIGH PRICE */}
+          <input
+            type="number"
+            placeholder="High Price"
+            value={highPrice}
+            onChange={(e) => setHighPrice(e.target.value)}
+            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+          />
+
+          {/* PROFIT */}
+          <div>
+            <label className="block text-zinc-400 mb-2 font-semibold">
+              PROFIT PERCENTAGE (AUTO)
+            </label>
+
+            <div
+              className={`w-full rounded-2xl p-4 font-bold text-xl border ${
+                Number(profitPercentage) >= 0
+                  ? "bg-green-500/10 border-green-500 text-green-400"
+                  : "bg-red-500/10 border-red-500 text-red-400"
+              }`}
+            >
+              {profitPercentage || "0"}%
+            </div>
+          </div>
+        </div>
+
+        {/* BUTTON */}
+        <div className="flex gap-4">
+          {editingId && (
+            <button
+              onClick={() => {
+                setEditingId(null);
+
+                setEmiten("");
+                setTradingType("");
+
+                setEntry1("");
+                setEntry2("");
+                setEntry3("");
+
+                setAvg("");
+
+                setTp("");
+                setTp1("");
+                setTp2("");
+                setTp3("");
+
+                setStatus("RUNNING");
+
+                setHighPrice("");
+
+                setProfitPercentage("");
+              }}
+              className="w-40 bg-zinc-700 hover:bg-zinc-600 transition text-white font-bold py-4 rounded-2xl text-lg"
+            >
+              CANCEL
+            </button>
+          )}
+
+          <button
+            onClick={saveSignal}
+            disabled={loading}
+            className="flex-1 bg-yellow-400 hover:bg-yellow-300 transition text-black font-bold py-4 rounded-2xl text-lg"
+          >
+            {loading
+              ? "MENYIMPAN..."
+              : editingId
+                ? "UPDATE SIGNAL"
+                : "SIMPAN SIGNAL"}
           </button>
-        </form>
-      </div>
-    </main>
+        </div>
+        {/* FILTER */}
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search Emiten..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+          />
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+          >
+            <option value="ALL">ALL STATUS</option>
+
+            <option value="RUNNING">RUNNING</option>
+
+            <option value="DONE">DONE</option>
+          </select>
+
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+          >
+            <option value="ALL">ALL TYPE</option>
+
+            <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+
+            <option value="BSJC">BSJC</option>
+
+            <option value="LIVE TRADE">LIVE TRADE</option>
+
+            <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+
+            <option value="SWING">SWING</option>
+          </select>
+        </div>
+
+        {/* SIGNAL TABLE */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden"></div>
+        {/* SIGNAL TABLE */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+          <div className="p-6 border-b border-zinc-800">
+            <h2 className="text-3xl font-black text-yellow-400">
+              SIGNAL TERBARU
+            </h2>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[900px]">
+              <thead className="bg-zinc-800">
+                <tr>
+                  <th className="p-5 text-left">Date</th>
+
+                  <th className="p-5 text-left">Emiten</th>
+
+                  <th className="p-5 text-left">Type</th>
+
+                  <th className="p-5 text-left">AVG</th>
+
+                  <th className="p-5 text-left">Profit</th>
+
+                  <th className="p-5 text-left">Status</th>
+
+                  <th className="p-5 text-left">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredSignals.map((signal) => (
+                  <tr key={signal.id} className="border-t border-zinc-800">
+                    <td className="p-5">{formatDate(signal.tanggal_signal)}</td>
+
+                    <td className="p-5 font-bold text-yellow-400">
+                      {signal.emiten}
+                    </td>
+
+                    <td className="p-5">{signal.trading_type}</td>
+
+                    <td className="p-5">{signal.avg}</td>
+
+                    <td className="p-5 text-green-400 font-bold">
+                      {signal.profit_percentage}%
+                    </td>
+
+                    <td className="p-5">
+                      <span
+                        className={
+                          signal.status === "DONE"
+                            ? "text-green-400 font-bold"
+                            : "text-red-400 font-bold"
+                        }
+                      >
+                        {signal.status}
+                      </span>
+                    </td>
+
+                    <td className="p-5">
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => {
+                            setEditingId(signal.id);
+
+                            setEmiten(signal.emiten || "");
+
+                            setTradingType(signal.trading_type || "");
+
+                            setEntry1(signal.entry_1?.toString() || "");
+
+                            setEntry2(signal.entry_2?.toString() || "");
+
+                            setEntry3(signal.entry_3?.toString() || "");
+
+                            setAvg(signal.avg?.toString() || "");
+
+                            setTp(signal.tp?.toString() || "");
+
+                            setTp1(signal.tp_1?.toString() || "");
+
+                            setTp2(signal.tp_2?.toString() || "");
+
+                            setTp3(signal.tp_3?.toString() || "");
+
+                            setStatus(signal.status || "RUNNING");
+
+                            setHighPrice(signal.high_price?.toString() || "");
+
+                            setProfitPercentage(
+                              signal.profit_percentage?.toString() || "",
+                            );
+
+                            window.scrollTo({
+                              top: 0,
+                              behavior: "smooth",
+                            });
+                          }}
+                          className="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-xl font-bold"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => deleteSignal(signal.id)}
+                          className="bg-red-500 hover:bg-red-400 px-4 py-2 rounded-xl font-bold"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
