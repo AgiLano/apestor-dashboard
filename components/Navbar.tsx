@@ -12,7 +12,7 @@ export default function Navbar() {
         {/* LOGO */}
         <div className="flex items-center gap-4">
           <img
-            src="/logo.png"
+            src="/logo-navbar.png"
             alt="APESTOR"
             className="w-14 h-14 rounded-full border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 object-contain bg-black p-1"
           />
