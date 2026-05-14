@@ -14,7 +14,7 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="APESTOR"
-            className="w-14 h-14 rounded-full border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 object-cover"
+            className="w-14 h-14 rounded-full border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 object-contain bg-black p-1"
           />
 
           <div>
