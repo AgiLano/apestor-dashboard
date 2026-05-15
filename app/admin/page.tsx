@@ -149,7 +149,9 @@ export default function AdminPage() {
     if (numbers.length > 0) {
       const total = numbers.reduce((a, b) => a + b, 0);
 
-      setAvg((total / numbers.length).toFixed(2));
+      const average = total / numbers.length;
+
+      setAvg(Number(average.toFixed(2)).toString());
     } else {
       setAvg("");
     }
@@ -160,27 +162,15 @@ export default function AdminPage() {
   // =========================
 
   useEffect(() => {
-    if (!avg) {
+    if (!avg || !highPrice) {
       setProfitPercentage("");
       return;
     }
 
-    let targetTP = 0;
+    const result = ((Number(highPrice) - Number(avg)) / Number(avg)) * 100;
 
-    if (tradingType === "SWING") {
-      targetTP = Number(tp1 || 0);
-    } else {
-      targetTP = Number(tp || 0);
-    }
-
-    if (targetTP > 0) {
-      const result = ((targetTP - Number(avg)) / Number(avg)) * 100;
-
-      setProfitPercentage(result.toFixed(2));
-    } else {
-      setProfitPercentage("");
-    }
-  }, [avg, tp, tp1, tradingType]);
+    setProfitPercentage(Number(result.toFixed(2)).toString());
+  }, [avg, highPrice]);
 
   // =========================
   // SAVE SIGNAL
@@ -598,7 +588,7 @@ export default function AdminPage() {
         </div>
 
         {/* BUTTON */}
-        <div className="flex gap-4">
+        <div className="mt-8 mb-10 flex flex-col md:flex-row gap-4 max-w-4xl">
           {editingId && (
             <button
               onClick={() => {
@@ -624,7 +614,17 @@ export default function AdminPage() {
 
                 setProfitPercentage("");
               }}
-              className="w-40 bg-zinc-700 hover:bg-zinc-600 transition text-white font-bold py-4 rounded-2xl text-lg"
+              className="
+        w-full md:w-40
+        bg-zinc-700
+        hover:bg-zinc-600
+        transition-all
+        text-white
+        font-bold
+        py-4
+        rounded-2xl
+        text-lg
+      "
             >
               CANCEL
             </button>
@@ -633,7 +633,19 @@ export default function AdminPage() {
           <button
             onClick={saveSignal}
             disabled={loading}
-            className="flex-1 bg-yellow-400 hover:bg-yellow-300 transition text-black font-bold py-4 rounded-2xl text-lg"
+            className="
+      w-full
+      bg-yellow-400
+      hover:bg-yellow-300
+      transition-all
+      text-black
+      font-black
+      py-4
+      rounded-2xl
+      text-lg
+      shadow-lg
+      shadow-yellow-400/20
+    "
           >
             {loading
               ? "MENYIMPAN..."
@@ -690,8 +702,131 @@ export default function AdminPage() {
               SIGNAL TERBARU
             </h2>
           </div>
+          {/* MOBILE SIGNAL CARDS */}
+          <div className="md:hidden space-y-4">
+            {filteredSignals.map((signal) => (
+              <div
+                key={signal.id}
+                className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-2xl font-black text-yellow-400">
+                    {signal.emiten}
+                  </h2>
 
-          <div className="overflow-x-auto">
+                  <span
+                    className={`font-bold ${
+                      signal.status === "DONE"
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {signal.status}
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  <p>
+                    <span className="text-zinc-500">Date:</span>{" "}
+                    {formatDate(signal.tanggal_signal)}
+                  </p>
+
+                  <p>
+                    <span className="text-zinc-500">Type:</span>{" "}
+                    {signal.trading_type}
+                  </p>
+
+                  <p>
+                    <span className="text-zinc-500">AVG:</span> {signal.avg}
+                  </p>
+
+                  <p className="text-green-400 font-bold">
+                    PROFIT {signal.profit_percentage}%
+                  </p>
+                </div>
+
+                <div className="flex gap-3 mt-5">
+                  <button
+                    onClick={() => {
+                      setEditingId(signal.id);
+
+                      setEmiten(signal.emiten || "");
+
+                      setTradingType(signal.trading_type || "");
+
+                      setSignalDate(
+                        signal.tanggal_signal
+                          ? new Date(signal.tanggal_signal)
+                          : null,
+                      );
+
+                      setEntry1(signal.entry_1?.toString() || "");
+
+                      setEntry2(signal.entry_2?.toString() || "");
+
+                      setEntry3(signal.entry_3?.toString() || "");
+
+                      setEntry1Date(
+                        signal.entry_1_date
+                          ? new Date(signal.entry_1_date)
+                          : null,
+                      );
+
+                      setEntry2Date(
+                        signal.entry_2_date
+                          ? new Date(signal.entry_2_date)
+                          : null,
+                      );
+
+                      setEntry3Date(
+                        signal.entry_3_date
+                          ? new Date(signal.entry_3_date)
+                          : null,
+                      );
+
+                      setDoneDate(
+                        signal.done_date ? new Date(signal.done_date) : null,
+                      );
+
+                      setAvg(signal.avg?.toString() || "");
+
+                      setTp(signal.tp?.toString() || "");
+
+                      setTp1(signal.tp_1?.toString() || "");
+
+                      setTp2(signal.tp_2?.toString() || "");
+
+                      setTp3(signal.tp_3?.toString() || "");
+
+                      setStatus(signal.status || "RUNNING");
+
+                      setHighPrice(signal.high_price?.toString() || "");
+
+                      setProfitPercentage(
+                        signal.profit_percentage?.toString() || "",
+                      );
+
+                      window.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    }}
+                    className="flex-1 bg-blue-500 hover:bg-blue-400 py-3 rounded-2xl font-bold"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => deleteSignal(signal.id)}
+                    className="flex-1 bg-red-500 hover:bg-red-400 py-3 rounded-2xl font-bold"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[900px]">
               <thead className="bg-zinc-800">
                 <tr>

@@ -304,7 +304,7 @@ export default function Home() {
             {/* HEADER */}
             <div className="flex justify-between items-start mb-5">
               <div>
-                <h2 className="text-4xl md:text-5xl font-bold text-yellow-400">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight text-yellow-400">
                   {signal.emiten}
                 </h2>
 
@@ -429,7 +429,7 @@ export default function Home() {
           className="w-full flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-3xl p-5 mb-5 hover:border-yellow-400 transition"
         >
           <div>
-            <h2 className="text-2xl md:text-5xl font-bold text-yellow-400 text-left">
+            <h2 className="text-2xl md:text-5xl font-black text-white text-left tracking-tight">
               {title}
             </h2>
 
@@ -452,20 +452,22 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-black text-white pt-32 md:pt-10 p-4 md:p-10">
+      <main className="min-h-screen bg-black text-white pt-6 md:pt-10 p-4 md:p-10">
         {/* HEADER */}
-        <div className="mb-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-yellow-400">
-            APESTOR Dashboard
+        <div className="mb-5">
+          <h1 className="text-5xl md:text-6xl font-black leading-none text-yellow-400">
+            APESTOR
+            <br />
+            Dashboard
           </h1>
 
-          <p className="text-zinc-400 mt-3 text-base md:text-xl">
+          <p className="text-zinc-400 mt-3 text-sm md:text-base">
             Realtime Trading Community Dashboard
           </p>
         </div>
 
         {/* SEARCH + FILTER */}
-        <div className="sticky top-[90px] md:top-[100px] z-40 bg-black pb-5 flex flex-col md:flex-row gap-4 mb-10">
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
           {/* SEARCH */}
           <input
             type="text"
