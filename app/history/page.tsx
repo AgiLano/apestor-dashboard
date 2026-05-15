@@ -433,7 +433,7 @@ export default function HistoryPage() {
           </div>
 
           {/* TABLE */}
-          <div className="overflow-x-auto border border-zinc-800 rounded-3xl">
+          <div className="hidden md:block overflow-x-auto border border-zinc-800 rounded-3xl">
             <table className="w-full min-w-[1000px] bg-zinc-900">
               <thead className="bg-zinc-800">
                 <tr>
@@ -561,6 +561,125 @@ export default function HistoryPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+          {/* MOBILE CARD */}
+          <div className="md:hidden space-y-4">
+            {filteredSignals.map((signal) => (
+              <div
+                key={signal.id}
+                className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5"
+              >
+                {/* TOP */}
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h2 className="text-3xl font-black text-yellow-400">
+                      {signal.emiten}
+                    </h2>
+
+                    <p className="text-zinc-400 text-sm mt-1">
+                      {signal.trading_type}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span
+                      className={`px-4 py-2 rounded-2xl text-sm font-bold ${
+                        signal.status === "DONE"
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-red-500/20 text-red-400"
+                      }`}
+                    >
+                      {signal.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* DATE */}
+                <div className="mb-4">
+                  <p className="text-zinc-500 text-sm">Tanggal</p>
+
+                  <p className="font-semibold">
+                    {formatDate(signal.tanggal_signal)}
+                  </p>
+                </div>
+
+                {/* ENTRY */}
+                <div className="space-y-3 mb-5">
+                  {Number(signal.entry_1) > 0 && (
+                    <div className="bg-zinc-800 rounded-2xl p-3">
+                      <p className="text-yellow-400 font-bold text-sm">
+                        ENTRY 1
+                      </p>
+
+                      <p className="text-xl font-bold">{signal.entry_1}</p>
+
+                      <p className="text-zinc-500 text-xs mt-1">
+                        {signal.entry_1_date
+                          ? formatDate(signal.entry_1_date)
+                          : "-"}
+                      </p>
+                    </div>
+                  )}
+
+                  {Number(signal.entry_2) > 0 && (
+                    <div className="bg-zinc-800 rounded-2xl p-3">
+                      <p className="text-blue-400 font-bold text-sm">ENTRY 2</p>
+
+                      <p className="text-xl font-bold">{signal.entry_2}</p>
+
+                      <p className="text-zinc-500 text-xs mt-1">
+                        {signal.entry_2_date
+                          ? formatDate(signal.entry_2_date)
+                          : "-"}
+                      </p>
+                    </div>
+                  )}
+
+                  {Number(signal.entry_3) > 0 && (
+                    <div className="bg-zinc-800 rounded-2xl p-3">
+                      <p className="text-purple-400 font-bold text-sm">
+                        ENTRY 3
+                      </p>
+
+                      <p className="text-xl font-bold">{signal.entry_3}</p>
+
+                      <p className="text-zinc-500 text-xs mt-1">
+                        {signal.entry_3_date
+                          ? formatDate(signal.entry_3_date)
+                          : "-"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* BOTTOM */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-zinc-800 rounded-2xl p-3">
+                    <p className="text-zinc-500 text-xs">AVG</p>
+
+                    <p className="font-bold text-lg">{signal.avg || "-"}</p>
+                  </div>
+
+                  <div className="bg-zinc-800 rounded-2xl p-3">
+                    <p className="text-zinc-500 text-xs">TP</p>
+
+                    <p className="font-bold text-lg">
+                      {signal.trading_type === "SWING"
+                        ? signal.tp_1 || "-"
+                        : signal.tp || "-"}
+                    </p>
+                  </div>
+
+                  <div className="bg-zinc-800 rounded-2xl p-3">
+                    <p className="text-zinc-500 text-xs">PROFIT</p>
+
+                    <p className="font-bold text-lg text-green-400">
+                      {signal.profit_percentage || 0}%
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

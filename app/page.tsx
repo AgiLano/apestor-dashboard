@@ -32,6 +32,20 @@ export default function Home() {
   const [typeFilter, setTypeFilter] = useState("ALL");
 
   // =========================
+  // AVG DOWN CALCULATOR
+  // =========================
+
+  const [avgAwal, setAvgAwal] = useState("");
+  const [lotAwal, setLotAwal] = useState("");
+
+  const [avgDown, setAvgDown] = useState("");
+  const [lotTambahan, setLotTambahan] = useState("");
+
+  const [hasilAvg, setHasilAvg] = useState(0);
+  const [totalLot, setTotalLot] = useState(0);
+  const [totalModal, setTotalModal] = useState(0);
+
+  // =========================
   // COLLAPSIBLE
   // =========================
 
@@ -48,6 +62,36 @@ export default function Home() {
       ...prev,
       [section]: !prev[section],
     }));
+  }
+
+  function hitungAvgDown() {
+    const harga1 = Number(avgAwal);
+    const lot1 = Number(lotAwal);
+
+    const harga2 = Number(avgDown);
+    const lot2 = Number(lotTambahan);
+
+    if (!harga1 || !lot1 || !harga2 || !lot2) {
+      return;
+    }
+
+    const totalLembar1 = lot1 * 100;
+    const totalLembar2 = lot2 * 100;
+
+    const modal1 = harga1 * totalLembar1;
+    const modal2 = harga2 * totalLembar2;
+
+    const totalModalSemua = modal1 + modal2;
+
+    const totalLotSemua = lot1 + lot2;
+
+    const totalLembarSemua = totalLotSemua * 100;
+
+    const avgBaru = totalModalSemua / totalLembarSemua;
+
+    setHasilAvg(Number(avgBaru.toFixed(2)));
+    setTotalLot(totalLotSemua);
+    setTotalModal(totalModalSemua);
   }
 
   // =========================
@@ -710,6 +754,89 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        {/* AVG DOWN CALCULATOR */}
+        <section className="mt-8 md:mt-12 mb-10">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 md:p-6 max-w-5xl mx-auto">
+            <div className="mb-6">
+              <h2 className="text-2xl md:text-5xl font-black text-yellow-400">
+                AVG DOWN
+              </h2>
+
+              <p className="text-zinc-400 mt-2">
+                Kalkulator average down saham
+              </p>
+            </div>
+
+            {/* INPUT */}
+            <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4">
+              <input
+                type="number"
+                placeholder="Avg Awal"
+                value={avgAwal}
+                onChange={(e) => setAvgAwal(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+              />
+
+              <input
+                type="number"
+                placeholder="Lot Awal"
+                value={lotAwal}
+                onChange={(e) => setLotAwal(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+              />
+
+              <input
+                type="number"
+                placeholder="Harga Avg Down"
+                value={avgDown}
+                onChange={(e) => setAvgDown(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+              />
+
+              <input
+                type="number"
+                placeholder="Lot Tambahan"
+                value={lotTambahan}
+                onChange={(e) => setLotTambahan(e.target.value)}
+                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+              />
+            </div>
+
+            {/* BUTTON */}
+            <button
+              onClick={hitungAvgDown}
+              className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl py-2.5 text-sm transition mb-4"
+            >
+              HITUNG AVG
+            </button>
+
+            {/* RESULT */}
+            <div className="bg-black border border-zinc-800 rounded-2xl p-4">
+              <p className="text-zinc-400 text-sm">AVG BARU</p>
+
+              <h2 className="text-2xl md:text-4xl font-black text-yellow-400 mt-1">
+                {hasilAvg || 0}
+              </h2>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+                <div>
+                  <p className="text-zinc-500 text-sm">Total Lot</p>
+
+                  <h3 className="text-lg md:text-2xl font-bold">{totalLot}</h3>
+                </div>
+
+                <div>
+                  <p className="text-zinc-500 text-sm">Total Modal</p>
+
+                  <h3 className="text-lg md:text-2xl font-bold text-green-400">
+                    Rp {totalModal.toLocaleString("id-ID")}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* SECTIONS */}
         {renderSection("HAKA PREOPEN", "haka", hakaSignals)}
