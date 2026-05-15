@@ -13,9 +13,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "APESTOR Dashboard",
+
   description: "Realtime Trading Community Dashboard",
+
+  icons: {
+    icon: "/icon.png",
+
+    apple: "/apple-touch-icon.png",
+  },
+
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
