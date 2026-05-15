@@ -2,9 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Navbar() {
   const pathname = usePathname();
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      setIsAdmin(!!session);
+    }
+
+    checkSession();
+  }, []);
 
   return (
     <div className="w-full border-b border-zinc-800 bg-black sticky top-0 z-50">
@@ -38,16 +54,19 @@ export default function Navbar() {
           >
             Dashboard
           </Link>
-          <Link
-            href="/admin"
-            className={`px-3 md:px-5 py-2 text-sm md:text-base rounded-xl font-bold transition-all ${
-              pathname === "/admin"
-                ? "bg-yellow-400 text-black"
-                : "bg-zinc-900 text-white hover:bg-zinc-800"
-            }`}
-          >
-            Admin Panel
-          </Link>
+
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className={`px-3 md:px-5 py-2 text-sm md:text-base rounded-xl font-bold transition-all ${
+                pathname === "/admin"
+                  ? "bg-yellow-400 text-black"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+              }`}
+            >
+              Admin Panel
+            </Link>
+          )}
 
           <Link
             href="/history"

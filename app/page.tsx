@@ -452,7 +452,7 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-black text-white p-4 md:p-10">
+      <main className="min-h-screen bg-black text-white pt-32 md:pt-10 p-4 md:p-10">
         {/* HEADER */}
         <div className="mb-10">
           <h1 className="text-4xl md:text-6xl font-bold text-yellow-400">
@@ -465,7 +465,7 @@ export default function Home() {
         </div>
 
         {/* SEARCH + FILTER */}
-        <div className="sticky top-0 z-50 bg-black pb-5 flex flex-col md:flex-row gap-4 mb-10">
+        <div className="sticky top-[90px] md:top-[100px] z-40 bg-black pb-5 flex flex-col md:flex-row gap-4 mb-10">
           {/* SEARCH */}
           <input
             type="text"
@@ -578,8 +578,8 @@ export default function Home() {
             <p className="text-zinc-400 mt-2">Running vs Done Analytics</p>
           </div>
 
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full min-h-[320px] min-w-0 h-80">
+            <ResponsiveContainer width="100%" height={320}>
               <PieChart>
                 <Pie
                   data={pieData}
@@ -615,8 +615,8 @@ export default function Home() {
             <p className="text-zinc-400 mt-2">Realtime profit analytics</p>
           </div>
 
-          <div className="w-full h-72 md:h-96">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full min-h-[320px] min-w-0 h-72 md:h-96">
+            <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
 
@@ -647,8 +647,8 @@ export default function Home() {
             <p className="text-zinc-400 mt-2">Monthly profit analytics</p>
           </div>
 
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full min-h-[320px] min-w-0 h-80">
+            <ResponsiveContainer width="100%" height={320}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
 

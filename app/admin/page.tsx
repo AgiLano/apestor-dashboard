@@ -351,8 +351,18 @@ export default function AdminPage() {
 
   if (checkingAuth) {
     return (
-      <main className="min-h-screen bg-black flex items-center justify-center text-white">
-        <h1 className="text-3xl font-bold">Loading...</h1>
+      <main className="min-h-screen bg-black flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <img
+            src="/logo-navbar.png"
+            alt="Loading"
+            className="w-20 h-20 rounded-full border-2 border-yellow-400 animate-pulse"
+          />
+
+          <h1 className="text-yellow-400 text-2xl font-black">
+            Checking Admin Access...
+          </h1>
+        </div>
       </main>
     );
   }
@@ -365,11 +375,11 @@ export default function AdminPage() {
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
           <div>
-            <h1 className="text-4xl md:text-6xl font-black text-yellow-400">
+            <h1 className="text-3xl md:text-6xl font-black text-yellow-400 leading-tight">
               ADMIN PANEL
             </h1>
 
-            <p className="text-zinc-400 mt-2 text-lg">
+            <p className="text-zinc-400 mt-2 text-sm md:text-lg">
               Kelola signal trading APESTOR
             </p>
           </div>
@@ -381,7 +391,7 @@ export default function AdminPage() {
 
                 router.push("/login");
               }}
-              className="bg-red-500 hover:bg-red-400 transition px-6 py-3 rounded-2xl font-bold"
+              className="w-full md:w-auto bg-red-500 hover:bg-red-400 transition px-5 py-3 rounded-2xl font-bold text-sm md:text-base"
             >
               LOGOUT
             </button>
@@ -389,7 +399,7 @@ export default function AdminPage() {
         </div>
 
         {/* FORM */}
-        <div className="max-w-4xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 md:p-8 space-y-5 mb-10">
+        <div className="w-full max-w-4xl bg-zinc-900 border border-zinc-800 rounded-3xl p-4 md:p-8 space-y-4 md:space-y-5 mb-10">
           {/* EMITEN */}
           <input
             type="text"
@@ -673,8 +683,6 @@ export default function AdminPage() {
           </select>
         </div>
 
-        {/* SIGNAL TABLE */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden"></div>
         {/* SIGNAL TABLE */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
           <div className="p-6 border-b border-zinc-800">
