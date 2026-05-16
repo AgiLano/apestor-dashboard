@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toPng } from "html-to-image";
 
 export default function HistoryPage() {
   const [signals, setSignals] = useState<any[]>([]);
@@ -237,75 +238,36 @@ export default function HistoryPage() {
   // DOWNLOAD IMAGE
   // =========================
 
-  function downloadImage() {
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
+  async function downloadImage() {
+    const element = document.getElementById("history-image");
 
-    doc.setFillColor(0, 0, 0);
+    if (!element) return;
 
-    doc.rect(0, 0, 297, 210, "F");
+    try {
+      const dataUrl = await toPng(element, {
+        cacheBust: true,
+        backgroundColor: "#000000",
+      });
 
-    doc.setTextColor(255, 215, 0);
+      const link = document.createElement("a");
 
-    doc.setFontSize(28);
+      link.download = "apestor-history.png";
+      link.href = dataUrl;
 
-    doc.text("APESTOR HISTORY RECAP", 14, 20);
-
-    autoTable(doc, {
-      startY: 35,
-
-      head: [["Date", "Emiten", "Type", "AVG", "TP", "Profit", "Status"]],
-
-      body: filteredSignals.map((signal) => [
-        formatDate(signal.tanggal_signal),
-        signal.emiten,
-        signal.trading_type,
-        signal.avg || "-",
-        signal.trading_type === "SWING" ? signal.tp_1 || "-" : signal.tp || "-",
-        `${signal.profit_percentage || 0}%`,
-        signal.status,
-      ]),
-
-      theme: "grid",
-
-      styles: {
-        fillColor: [15, 15, 15],
-        textColor: [255, 255, 255],
-        lineColor: [35, 35, 35],
-        lineWidth: 0.2,
-        fontSize: 11,
-      },
-
-      headStyles: {
-        fillColor: [255, 215, 0],
-        textColor: [0, 0, 0],
-        fontStyle: "bold",
-      },
-
-      alternateRowStyles: {
-        fillColor: [25, 25, 25],
-      },
-
-      bodyStyles: {
-        textColor: [255, 255, 255],
-      },
-    });
-
-    doc.save("apestor-history-image.pdf");
+      link.click();
+    } catch (error) {
+      console.error("Download image error:", error);
+    }
   }
-
   return (
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white p-4 md:p-10">
+      <div className="min-h-screen bg-black text-white p-4 md:p-10">
         <div className="max-w-7xl mx-auto">
           {/* HEADER */}
           <div className="mb-10">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-amber-300 leading-none drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-amber-300 leading-none">
               HISTORY RECAP
             </h1>
 
@@ -323,7 +285,7 @@ bg-amber-300
 hover:bg-amber-200
 transition-all
 duration-200
-hover:shadow-[0_0_30px_rgba(252,211,77,0.15)]
+
 text-black
 font-black
 px-6
@@ -342,11 +304,11 @@ shadow-amber-300/10
 bg-zinc-800
 hover:bg-zinc-700
 border
-border-white/5
+border-zinc-800
 transition-all
 duration-200
 text-white
-font-bold
+font-black
 px-6
 py-3
 rounded-2xl
@@ -362,10 +324,10 @@ rounded-2xl
               <button
                 key={item}
                 onClick={() => setDateFilter(item)}
-                className={`px-5 py-3 rounded-2xl font-bold transition ${
+                className={`px-5 py-3 rounded-2xl font-bold transition-all duration-200 ${
                   dateFilter === item
                     ? "bg-amber-300 text-black shadow-lg shadow-amber-300/10"
-                    : "bg-gradient-to-b from-zinc-900 to-black border border-white/5 text-white hover:bg-zinc-900/80"
+                    : "bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-900/80"
                 }`}
               >
                 {item}
@@ -380,13 +342,13 @@ rounded-2xl
               placeholder="Search Emiten..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
             />
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
             >
               <option value="ALL" className="bg-black text-white">
                 ALL STATUS
@@ -404,7 +366,7 @@ rounded-2xl
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
             >
               <option value="ALL" className="bg-black text-white">
                 ALL TYPE
@@ -434,7 +396,7 @@ rounded-2xl
 
           {/* STATS */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mb-10">
-            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
               <p className="text-zinc-400">Total Signals</p>
 
               <h2 className="text-4xl font-black tracking-tight text-amber-300 mt-3">
@@ -442,7 +404,7 @@ rounded-2xl
               </h2>
             </div>
 
-            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
               <p className="text-zinc-400">Running</p>
 
               <h2 className="text-4xl font-black tracking-tight text-rose-400 mt-3">
@@ -450,7 +412,7 @@ rounded-2xl
               </h2>
             </div>
 
-            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
               <p className="text-zinc-400">Done</p>
 
               <h2 className="text-4xl font-black tracking-tight text-emerald-400 mt-3">
@@ -458,7 +420,7 @@ rounded-2xl
               </h2>
             </div>
 
-            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
               <p className="text-zinc-400">Avg Profit</p>
 
               <h2 className="text-4xl font-black tracking-tight text-amber-200 mt-3">
@@ -466,7 +428,7 @@ rounded-2xl
               </h2>
             </div>
 
-            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
               <p className="text-zinc-400">Winrate</p>
 
               <h2 className="text-4xl font-black tracking-tight text-emerald-300 mt-3">
@@ -475,163 +437,170 @@ rounded-2xl
             </div>
           </div>
 
-          {/* TABLE */}
-          <div className="hidden md:block overflow-x-auto bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.25)]">
-            <table className="w-full min-w-[1000px]">
-              <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-white/5">
-                <tr>
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Date
-                  </th>
+          <div id="history-image" className="bg-black p-8 rounded-3xl">
+            {/* TABLE */}
+            <div className="hidden md:block bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-zinc-800">
+                  <tr>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Date
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Emiten
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Emiten
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Type
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Type
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    AVG
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      AVG
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Timeline
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Timeline
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    TP
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      TP
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Profit
-                  </th>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Profit
+                    </th>
 
-                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredSignals.map((signal) => (
-                  <tr
-                    key={signal.id}
-                    className="border-t border-white/5 hover:bg-white/[0.02] transition-all duration-200"
-                  >
-                    <td className="p-4">{formatDate(signal.tanggal_signal)}</td>
-
-                    <td className="p-5 font-black tracking-tight text-amber-300">
-                      {signal.emiten}
-                    </td>
-
-                    <td className="p-4">{signal.trading_type}</td>
-
-                    <td className="p-4">{signal.avg || "-"}</td>
-
-                    <td className="p-4">
-                      <div className="space-y-3 text-sm">
-                        {/* ENTRY 1 */}
-                        {Number(signal.entry_1) > 0 && (
-                          <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-amber-300 font-bold">ENTRY 1</p>
-
-                            <p className="text-white font-semibold">
-                              {signal.entry_1}
-                            </p>
-
-                            <p className="text-zinc-400 text-xs mt-1">
-                              {signal.entry_1_date
-                                ? formatDate(signal.entry_1_date)
-                                : "-"}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* ENTRY 2 */}
-                        {Number(signal.entry_2) > 0 && (
-                          <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-emerald-300 font-bold">
-                              ENTRY 2
-                            </p>
-
-                            <p className="text-white font-semibold">
-                              {signal.entry_2}
-                            </p>
-
-                            <p className="text-zinc-400 text-xs mt-1">
-                              {signal.entry_2_date
-                                ? formatDate(signal.entry_2_date)
-                                : "-"}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* ENTRY 3 */}
-                        {Number(signal.entry_3) > 0 && (
-                          <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-rose-300 font-bold">ENTRY 3</p>
-
-                            <p className="text-white font-semibold">
-                              {signal.entry_3}
-                            </p>
-
-                            <p className="text-zinc-400 text-xs mt-1">
-                              {signal.entry_3_date
-                                ? formatDate(signal.entry_3_date)
-                                : "-"}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* DONE */}
-                        {signal.done_date && (
-                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3">
-                            <p className="text-emerald-400 font-bold">DONE</p>
-
-                            <p className="text-zinc-300 text-xs mt-1">
-                              {signal.done_date
-                                ? formatDate(signal.done_date)
-                                : "-"}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="p-4">
-                      {signal.trading_type === "SWING"
-                        ? signal.tp_1 || "-"
-                        : signal.tp || "-"}
-                    </td>
-
-                    <td className="p-5 text-emerald-400 font-bold">
-                      {signal.profit_percentage || 0}%
-                    </td>
-
-                    <td className="p-4">
-                      <span
-                        className={
-                          signal.status === "DONE"
-                            ? "text-emerald-400 font-bold"
-                            : "text-rose-400 font-bold"
-                        }
-                      >
-                        {signal.status}
-                      </span>
-                    </td>
+                    <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                      Status
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {filteredSignals.map((signal) => (
+                    <tr
+                      key={signal.id}
+                      className="border-t border-zinc-800 hover:bg-zinc-800/40 transition-all duration-200"
+                    >
+                      <td className="p-4">
+                        {formatDate(signal.tanggal_signal)}
+                      </td>
+
+                      <td className="p-4 font-black tracking-tight text-amber-300">
+                        {signal.emiten}
+                      </td>
+
+                      <td className="p-4">{signal.trading_type}</td>
+
+                      <td className="p-4">{signal.avg || "-"}</td>
+
+                      <td className="p-4">
+                        <div className="space-y-3 text-sm">
+                          {/* ENTRY 1 */}
+                          {Number(signal.entry_1) > 0 && (
+                            <div className="bg-zinc-800 rounded-2xl p-3">
+                              <p className="text-amber-300 font-bold">
+                                ENTRY 1
+                              </p>
+
+                              <p className="text-white font-semibold">
+                                {signal.entry_1}
+                              </p>
+
+                              <p className="text-zinc-400 text-xs mt-1">
+                                {signal.entry_1_date
+                                  ? formatDate(signal.entry_1_date)
+                                  : "-"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* ENTRY 2 */}
+                          {Number(signal.entry_2) > 0 && (
+                            <div className="bg-zinc-800 rounded-2xl p-3">
+                              <p className="text-emerald-300 font-bold">
+                                ENTRY 2
+                              </p>
+
+                              <p className="text-white font-semibold">
+                                {signal.entry_2}
+                              </p>
+
+                              <p className="text-zinc-400 text-xs mt-1">
+                                {signal.entry_2_date
+                                  ? formatDate(signal.entry_2_date)
+                                  : "-"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* ENTRY 3 */}
+                          {Number(signal.entry_3) > 0 && (
+                            <div className="bg-zinc-800 rounded-2xl p-3">
+                              <p className="text-rose-300 font-bold">ENTRY 3</p>
+
+                              <p className="text-white font-semibold">
+                                {signal.entry_3}
+                              </p>
+
+                              <p className="text-zinc-400 text-xs mt-1">
+                                {signal.entry_3_date
+                                  ? formatDate(signal.entry_3_date)
+                                  : "-"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* DONE */}
+                          {signal.done_date && (
+                            <div className="bg-zinc-800 border border-zinc-700 rounded-2xl p-3">
+                              <p className="text-emerald-400 font-bold">DONE</p>
+
+                              <p className="text-zinc-300 text-xs mt-1">
+                                {signal.done_date
+                                  ? formatDate(signal.done_date)
+                                  : "-"}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="p-4">
+                        {signal.trading_type === "SWING"
+                          ? signal.tp_1 || "-"
+                          : signal.tp || "-"}
+                      </td>
+
+                      <td className="p-4 text-emerald-400 font-bold">
+                        {signal.profit_percentage || 0}%
+                      </td>
+
+                      <td className="p-4">
+                        <span
+                          className={
+                            signal.status === "DONE"
+                              ? "text-emerald-400 font-bold"
+                              : "text-rose-400 font-bold"
+                          }
+                        >
+                          {signal.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+
           {/* MOBILE CARD */}
           <div className="md:hidden space-y-3">
             {filteredSignals.map((signal) => (
               <div
                 key={signal.id}
-                className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]"
+                className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 "
               >
                 {/* TOP */}
                 <div className="flex items-start justify-between mb-4">
@@ -649,8 +618,8 @@ rounded-2xl
                     <span
                       className={`px-4 py-2 rounded-2xl text-sm font-bold ${
                         signal.status === "DONE"
-                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                          : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                          ? "bg-zinc-800 text-emerald-400 border border-zinc-700"
+                          : "bg-zinc-800 text-rose-400 border border-zinc-700"
                       }`}
                     >
                       {signal.status}

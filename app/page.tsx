@@ -74,8 +74,11 @@ export default function Home() {
     const totalLembar1 = lot1 * 100;
     const totalLembar2 = lot2 * 100;
 
-    const modal1 = harga1 * totalLembar1;
-    const modal2 = harga2 * totalLembar2;
+    const feeBuy = 0.0015;
+
+    const modal1 = harga1 * totalLembar1 * (1 + feeBuy);
+
+    const modal2 = harga2 * totalLembar2 * (1 + feeBuy);
 
     const totalModalSemua = modal1 + modal2;
 
