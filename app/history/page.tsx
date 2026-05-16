@@ -447,7 +447,10 @@ rounded-2xl
             </div>
           </div>
 
-          <div id="history-image" className="bg-black p-8 rounded-3xl hidden">
+          <div
+            id="history-image"
+            className="bg-black p-8 rounded-3xl hidden w-[1600px]"
+          >
             {/* TABLE */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
               <table className="w-full">
