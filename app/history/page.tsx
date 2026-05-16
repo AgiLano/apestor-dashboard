@@ -243,10 +243,15 @@ export default function HistoryPage() {
 
     if (!element) return;
 
+    const originalClass = element.className;
+
     try {
+      element.classList.remove("hidden");
+
       const dataUrl = await toPng(element, {
         cacheBust: true,
         backgroundColor: "#000000",
+        pixelRatio: 2,
       });
 
       const link = document.createElement("a");
@@ -257,8 +262,11 @@ export default function HistoryPage() {
       link.click();
     } catch (error) {
       console.error("Download image error:", error);
+    } finally {
+      element.className = originalClass;
     }
   }
+
   return (
     <>
       <Navbar />
@@ -437,10 +445,13 @@ rounded-2xl
             </div>
           </div>
 
-          <div id="history-image" className="bg-black p-8 rounded-3xl">
+          <div
+            id="history-image"
+            className="hidden md:block bg-black p-8 rounded-3xl"
+          >
             {/* TABLE */}
-            <div className="block overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-3xl">
-              <table className="w-full min-w-[1000px]">
+            <div className="hidden md:block bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+              <table className="w-full">
                 <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-zinc-800">
                   <tr>
                     <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
