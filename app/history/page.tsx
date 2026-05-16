@@ -449,7 +449,7 @@ rounded-2xl
 
           <div id="history-image" className="bg-black p-8 rounded-3xl hidden">
             {/* TABLE */}
-            <div className="hidden md:block bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-zinc-800">
                   <tr>
