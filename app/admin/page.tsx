@@ -346,10 +346,10 @@ export default function AdminPage() {
           <img
             src="/logo-navbar.png"
             alt="Loading"
-            className="w-20 h-20 rounded-full border-2 border-yellow-400 animate-pulse"
+            className="w-20 h-20 rounded-full border-2 border-amber-300 animate-pulse"
           />
 
-          <h1 className="text-yellow-400 text-2xl font-black">
+          <h1 className="text-amber-300 text-xl md:text-2xl font-black tracking-tight">
             Checking Admin Access...
           </h1>
         </div>
@@ -361,15 +361,15 @@ export default function AdminPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-black text-white p-5 md:p-10">
+      <main className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white p-4 md:p-10">
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
           <div>
-            <h1 className="text-3xl md:text-6xl font-black text-yellow-400 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-amber-300 leading-none drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               ADMIN PANEL
             </h1>
 
-            <p className="text-zinc-400 mt-2 text-sm md:text-lg">
+            <p className="text-zinc-500 mt-3 text-sm md:text-base">
               Kelola signal trading APESTOR
             </p>
           </div>
@@ -381,7 +381,7 @@ export default function AdminPage() {
 
                 router.push("/login");
               }}
-              className="w-full md:w-auto bg-red-500 hover:bg-red-400 transition px-5 py-3 rounded-2xl font-bold text-sm md:text-base"
+              className="w-full md:w-auto bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 transition-all duration-200 px-5 py-3 rounded-2xl font-bold text-sm md:text-base"
             >
               LOGOUT
             </button>
@@ -389,33 +389,45 @@ export default function AdminPage() {
         </div>
 
         {/* FORM */}
-        <div className="w-full max-w-4xl bg-zinc-900 border border-zinc-800 rounded-3xl p-4 md:p-8 space-y-4 md:space-y-5 mb-10">
+        <div className="w-full max-w-4xl bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 md:p-8 shadow-[0_0_60px_rgba(0,0,0,0.35)] space-y-4 md:space-y-5">
           {/* EMITEN */}
           <input
             type="text"
             placeholder="Emiten"
             value={emiten}
             onChange={(e) => setEmiten(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           />
 
           {/* TRADING TYPE */}
           <select
             value={tradingType}
             onChange={(e) => setTradingType(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           >
-            <option value="">Pilih Trading Type</option>
+            <option value="" className="bg-black text-white">
+              Pilih Trading Type
+            </option>
 
-            <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+            <option value="HAKA PREOPEN" className="bg-black text-white">
+              HAKA PREOPEN
+            </option>
 
-            <option value="BSJC">BSJC</option>
+            <option value="BSJC" className="bg-black text-white">
+              BSJC
+            </option>
 
-            <option value="LIVE TRADE">LIVE TRADE</option>
+            <option value="LIVE TRADE" className="bg-black text-white">
+              LIVE TRADE
+            </option>
 
-            <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+            <option value="MENU TAMBAHAN" className="bg-black text-white">
+              MENU TAMBAHAN
+            </option>
 
-            <option value="SWING">SWING</option>
+            <option value="SWING" className="bg-black text-white">
+              SWING
+            </option>
           </select>
 
           {/* SIGNAL DATE */}
@@ -426,7 +438,7 @@ export default function AdminPage() {
               selected={signalDate}
               onChange={(date: Date | null) => setSignalDate(date)}
               dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               placeholderText="Pilih tanggal signal"
             />
           </div>
@@ -438,14 +450,14 @@ export default function AdminPage() {
               placeholder="Entry 1"
               value={entry1}
               onChange={(e) => setEntry1(e.target.value)}
-              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             />
 
             <DatePicker
               selected={entry1Date}
               onChange={(date: Date | null) => setEntry1Date(date)}
               dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               placeholderText="Pilih tanggal"
             />
           </div>
@@ -457,14 +469,14 @@ export default function AdminPage() {
               placeholder="Entry 2"
               value={entry2}
               onChange={(e) => setEntry2(e.target.value)}
-              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             />
 
             <DatePicker
               selected={entry2Date}
               onChange={(date: Date | null) => setEntry2Date(date)}
               dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               placeholderText="Pilih tanggal"
             />
           </div>
@@ -476,14 +488,14 @@ export default function AdminPage() {
               placeholder="Entry 3"
               value={entry3}
               onChange={(e) => setEntry3(e.target.value)}
-              className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             />
 
             <DatePicker
               selected={entry3Date}
               onChange={(date: Date | null) => setEntry3Date(date)}
               dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               placeholderText="Pilih tanggal"
             />
           </div>
@@ -494,7 +506,7 @@ export default function AdminPage() {
               AVG (AUTO)
             </label>
 
-            <div className="w-full bg-blue-500/10 border border-blue-500 text-blue-400 rounded-2xl p-4 font-bold text-xl">
+            <div className="w-full bg-amber-300/10 border border-amber-300/20 text-amber-200 rounded-2xl p-4 font-black tracking-tight text-xl">
               {avg || "0"}
             </div>
           </div>
@@ -506,7 +518,7 @@ export default function AdminPage() {
               placeholder="TP"
               value={tp}
               onChange={(e) => setTp(e.target.value)}
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             />
           )}
 
@@ -518,7 +530,7 @@ export default function AdminPage() {
                 placeholder="TP 1"
                 value={tp1}
                 onChange={(e) => setTp1(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
 
               <input
@@ -526,7 +538,7 @@ export default function AdminPage() {
                 placeholder="TP 2"
                 value={tp2}
                 onChange={(e) => setTp2(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
 
               <input
@@ -534,7 +546,7 @@ export default function AdminPage() {
                 placeholder="TP 3"
                 value={tp3}
                 onChange={(e) => setTp3(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
             </div>
           )}
@@ -543,11 +555,15 @@ export default function AdminPage() {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           >
-            <option value="RUNNING">RUNNING</option>
+            <option value="RUNNING" className="bg-black text-white">
+              RUNNING
+            </option>
 
-            <option value="DONE">DONE</option>
+            <option value="DONE" className="bg-black text-white">
+              DONE
+            </option>
           </select>
 
           {status === "DONE" && (
@@ -555,7 +571,7 @@ export default function AdminPage() {
               selected={doneDate}
               onChange={(date: Date | null) => setDoneDate(date)}
               dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               placeholderText="Pilih tanggal DONE"
             />
           )}
@@ -566,7 +582,7 @@ export default function AdminPage() {
             placeholder="High Price"
             value={highPrice}
             onChange={(e) => setHighPrice(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-4 outline-none focus:border-yellow-400"
+            className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           />
 
           {/* PROFIT */}
@@ -578,8 +594,8 @@ export default function AdminPage() {
             <div
               className={`w-full rounded-2xl p-4 font-bold text-xl border ${
                 Number(profitPercentage) >= 0
-                  ? "bg-green-500/10 border-green-500 text-green-400"
-                  : "bg-red-500/10 border-red-500 text-red-400"
+                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                  : "bg-rose-500/10 border-rose-500/20 text-rose-400"
               }`}
             >
               {profitPercentage || "0"}%
@@ -615,16 +631,19 @@ export default function AdminPage() {
                 setProfitPercentage("");
               }}
               className="
-        w-full md:w-40
-        bg-zinc-700
-        hover:bg-zinc-600
-        transition-all
-        text-white
-        font-bold
-        py-4
-        rounded-2xl
-        text-lg
-      "
+w-full md:w-40
+bg-zinc-800
+hover:bg-zinc-700
+border
+border-white/5
+transition-all
+duration-200
+text-white
+font-bold
+py-4
+rounded-2xl
+text-lg
+"
             >
               CANCEL
             </button>
@@ -634,18 +653,20 @@ export default function AdminPage() {
             onClick={saveSignal}
             disabled={loading}
             className="
-      w-full
-      bg-yellow-400
-      hover:bg-yellow-300
-      transition-all
-      text-black
-      font-black
-      py-4
-      rounded-2xl
-      text-lg
-      shadow-lg
-      shadow-yellow-400/20
-    "
+w-full
+bg-amber-300
+hover:bg-amber-200
+transition-all
+duration-200
+hover:shadow-[0_0_30px_rgba(252,211,77,0.15)]
+text-black
+font-black
+py-4
+rounded-2xl
+text-lg
+shadow-lg
+shadow-amber-300/10
+"
           >
             {loading
               ? "MENYIMPAN..."
@@ -661,64 +682,82 @@ export default function AdminPage() {
             placeholder="Search Emiten..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+            className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           />
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           >
-            <option value="ALL">ALL STATUS</option>
+            <option value="ALL" className="bg-black text-white">
+              ALL STATUS
+            </option>
 
-            <option value="RUNNING">RUNNING</option>
+            <option value="RUNNING" className="bg-black text-white">
+              RUNNING
+            </option>
 
-            <option value="DONE">DONE</option>
+            <option value="DONE" className="bg-black text-white">
+              DONE
+            </option>
           </select>
 
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           >
-            <option value="ALL">ALL TYPE</option>
+            <option value="ALL" className="bg-black text-white">
+              ALL TYPE
+            </option>
 
-            <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+            <option value="HAKA PREOPEN" className="bg-black text-white">
+              HAKA PREOPEN
+            </option>
 
-            <option value="BSJC">BSJC</option>
+            <option value="BSJC" className="bg-black text-white">
+              BSJC
+            </option>
 
-            <option value="LIVE TRADE">LIVE TRADE</option>
+            <option value="LIVE TRADE" className="bg-black text-white">
+              LIVE TRADE
+            </option>
 
-            <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+            <option value="MENU TAMBAHAN" className="bg-black text-white">
+              MENU TAMBAHAN
+            </option>
 
-            <option value="SWING">SWING</option>
+            <option value="SWING" className="bg-black text-white">
+              SWING
+            </option>
           </select>
         </div>
 
         {/* SIGNAL TABLE */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
-          <div className="p-6 border-b border-zinc-800">
-            <h2 className="text-3xl font-black text-yellow-400">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.35)]">
+          <div className="p-6 border-b border-white/5">
+            <h2 className="text-3xl font-black tracking-tight text-amber-300">
               SIGNAL TERBARU
             </h2>
           </div>
           {/* MOBILE SIGNAL CARDS */}
-          <div className="md:hidden space-y-4">
+          <div className="md:hidden space-y-3">
             {filteredSignals.map((signal) => (
               <div
                 key={signal.id}
-                className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5"
+                className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 shadow-[0_0_30px_rgba(0,0,0,0.2)]"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-2xl font-black text-yellow-400">
+                  <h2 className="text-xl md:text-2xl font-black text-amber-300">
                     {signal.emiten}
                   </h2>
 
                   <span
                     className={`font-bold ${
                       signal.status === "DONE"
-                        ? "text-green-400"
-                        : "text-red-400"
+                        ? "text-emerald-400"
+                        : "text-rose-400"
                     }`}
                   >
                     {signal.status}
@@ -740,7 +779,7 @@ export default function AdminPage() {
                     <span className="text-zinc-500">AVG:</span> {signal.avg}
                   </p>
 
-                  <p className="text-green-400 font-bold">
+                  <p className="text-emerald-400 font-bold">
                     PROFIT {signal.profit_percentage}%
                   </p>
                 </div>
@@ -811,14 +850,26 @@ export default function AdminPage() {
                         behavior: "smooth",
                       });
                     }}
-                    className="flex-1 bg-blue-500 hover:bg-blue-400 py-3 rounded-2xl font-bold"
+                    className="
+flex-1
+bg-amber-300/10
+hover:bg-amber-300/20
+border
+border-amber-300/20
+text-amber-200
+transition-all
+duration-200
+py-3
+rounded-2xl
+font-bold
+"
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => deleteSignal(signal.id)}
-                    className="flex-1 bg-red-500 hover:bg-red-400 py-3 rounded-2xl font-bold"
+                    className="flex-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 transition-all duration-200 py-3 rounded-2xl font-bold"
                   >
                     Delete
                   </button>
@@ -828,54 +879,71 @@ export default function AdminPage() {
           </div>
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[900px]">
-              <thead className="bg-zinc-800">
+              <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-white/5">
                 <tr>
-                  <th className="p-5 text-left">Date</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Date
+                  </th>
 
-                  <th className="p-5 text-left">Emiten</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Emiten
+                  </th>
 
-                  <th className="p-5 text-left">Type</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Type
+                  </th>
 
-                  <th className="p-5 text-left">AVG</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    AVG
+                  </th>
 
-                  <th className="p-5 text-left">Profit</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Profit
+                  </th>
 
-                  <th className="p-5 text-left">Status</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Status
+                  </th>
 
-                  <th className="p-5 text-left">Action</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Action
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredSignals.map((signal) => (
-                  <tr key={signal.id} className="border-t border-zinc-800">
-                    <td className="p-5">{formatDate(signal.tanggal_signal)}</td>
+                  <tr
+                    key={signal.id}
+                    className="border-t border-white/5 hover:bg-white/[0.02] transition-all duration-200"
+                  >
+                    <td className="p-4">{formatDate(signal.tanggal_signal)}</td>
 
-                    <td className="p-5 font-bold text-yellow-400">
+                    <td className="p-4 font-bold text-amber-300">
                       {signal.emiten}
                     </td>
 
-                    <td className="p-5">{signal.trading_type}</td>
+                    <td className="p-4">{signal.trading_type}</td>
 
-                    <td className="p-5">{signal.avg}</td>
+                    <td className="p-4">{signal.avg}</td>
 
-                    <td className="p-5 text-green-400 font-bold">
+                    <td className="p-4 text-emerald-400 font-bold">
                       {signal.profit_percentage}%
                     </td>
 
-                    <td className="p-5">
+                    <td className="p-4">
                       <span
                         className={
                           signal.status === "DONE"
-                            ? "text-green-400 font-bold"
-                            : "text-red-400 font-bold"
+                            ? "text-emerald-400 font-bold"
+                            : "text-rose-400 font-bold"
                         }
                       >
                         {signal.status}
                       </span>
                     </td>
 
-                    <td className="p-5">
+                    <td className="p-4">
                       <div className="flex gap-3">
                         <button
                           onClick={() => {
@@ -944,14 +1012,26 @@ export default function AdminPage() {
                               behavior: "smooth",
                             });
                           }}
-                          className="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-xl font-bold"
+                          className="
+bg-amber-300/10
+hover:bg-amber-300/20
+border
+border-amber-300/20
+text-amber-200
+transition-all
+duration-200
+px-4
+py-2
+rounded-xl
+font-bold
+"
                         >
                           Edit
                         </button>
 
                         <button
                           onClick={() => deleteSignal(signal.id)}
-                          className="bg-red-500 hover:bg-red-400 px-4 py-2 rounded-xl font-bold"
+                          className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 transition-all duration-200 px-4 py-2 rounded-xl font-bold"
                         >
                           Delete
                         </button>

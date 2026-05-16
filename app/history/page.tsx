@@ -301,11 +301,11 @@ export default function HistoryPage() {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-black text-white p-5 md:p-10">
+      <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white p-4 md:p-10">
         <div className="max-w-7xl mx-auto">
           {/* HEADER */}
           <div className="mb-10">
-            <h1 className="text-5xl md:text-7xl font-black text-yellow-400">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-amber-300 leading-none drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               HISTORY RECAP
             </h1>
 
@@ -318,14 +318,39 @@ export default function HistoryPage() {
           <div className="flex flex-wrap gap-4 mb-8">
             <button
               onClick={exportPDF}
-              className="bg-yellow-400 hover:bg-yellow-300 transition text-black font-bold px-6 py-3 rounded-2xl"
+              className="
+bg-amber-300
+hover:bg-amber-200
+transition-all
+duration-200
+hover:shadow-[0_0_30px_rgba(252,211,77,0.15)]
+text-black
+font-black
+px-6
+py-3
+rounded-2xl
+shadow-lg
+shadow-amber-300/10
+"
             >
               Export PDF
             </button>
 
             <button
               onClick={downloadImage}
-              className="bg-blue-500 hover:bg-blue-400 transition text-white font-bold px-6 py-3 rounded-2xl"
+              className="
+bg-zinc-800
+hover:bg-zinc-700
+border
+border-white/5
+transition-all
+duration-200
+text-white
+font-bold
+px-6
+py-3
+rounded-2xl
+"
             >
               Download Image
             </button>
@@ -339,8 +364,8 @@ export default function HistoryPage() {
                 onClick={() => setDateFilter(item)}
                 className={`px-5 py-3 rounded-2xl font-bold transition ${
                   dateFilter === item
-                    ? "bg-yellow-400 text-black"
-                    : "bg-zinc-900 border border-zinc-800 text-white"
+                    ? "bg-amber-300 text-black shadow-lg shadow-amber-300/10"
+                    : "bg-gradient-to-b from-zinc-900 to-black border border-white/5 text-white hover:bg-zinc-900/80"
                 }`}
               >
                 {item}
@@ -355,125 +380,162 @@ export default function HistoryPage() {
               placeholder="Search Emiten..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             />
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             >
-              <option value="ALL">ALL STATUS</option>
+              <option value="ALL" className="bg-black text-white">
+                ALL STATUS
+              </option>
 
-              <option value="RUNNING">RUNNING</option>
+              <option value="RUNNING" className="bg-black text-white">
+                RUNNING
+              </option>
 
-              <option value="DONE">DONE</option>
+              <option value="DONE" className="bg-black text-white">
+                DONE
+              </option>
             </select>
 
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 outline-none"
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             >
-              <option value="ALL">ALL TYPE</option>
+              <option value="ALL" className="bg-black text-white">
+                ALL TYPE
+              </option>
 
-              <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+              <option value="HAKA PREOPEN" className="bg-black text-white">
+                HAKA PREOPEN
+              </option>
 
-              <option value="BSJC">BSJC</option>
+              <option value="BSJC" className="bg-black text-white">
+                BSJC
+              </option>
 
-              <option value="LIVE TRADE">LIVE TRADE</option>
+              <option value="LIVE TRADE" className="bg-black text-white">
+                LIVE TRADE
+              </option>
 
-              <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+              <option value="MENU TAMBAHAN" className="bg-black text-white">
+                MENU TAMBAHAN
+              </option>
 
-              <option value="SWING">SWING</option>
+              <option value="SWING" className="bg-black text-white">
+                SWING
+              </option>
             </select>
           </div>
 
           {/* STATS */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mb-10">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
               <p className="text-zinc-400">Total Signals</p>
 
-              <h2 className="text-4xl font-bold text-yellow-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-amber-300 mt-3">
                 {totalSignals}
               </h2>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
               <p className="text-zinc-400">Running</p>
 
-              <h2 className="text-4xl font-bold text-red-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-rose-400 mt-3">
                 {totalRunning}
               </h2>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
               <p className="text-zinc-400">Done</p>
 
-              <h2 className="text-4xl font-bold text-green-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-emerald-400 mt-3">
                 {totalDone}
               </h2>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
               <p className="text-zinc-400">Avg Profit</p>
 
-              <h2 className="text-4xl font-bold text-blue-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-amber-200 mt-3">
                 {avgProfit}%
               </h2>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5">
+            <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
               <p className="text-zinc-400">Winrate</p>
 
-              <h2 className="text-4xl font-bold text-purple-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-emerald-300 mt-3">
                 {winrate}%
               </h2>
             </div>
           </div>
 
           {/* TABLE */}
-          <div className="hidden md:block overflow-x-auto border border-zinc-800 rounded-3xl">
-            <table className="w-full min-w-[1000px] bg-zinc-900">
-              <thead className="bg-zinc-800">
+          <div className="hidden md:block overflow-x-auto bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.25)]">
+            <table className="w-full min-w-[1000px]">
+              <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-white/5">
                 <tr>
-                  <th className="p-5 text-left">Date</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Date
+                  </th>
 
-                  <th className="p-5 text-left">Emiten</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Emiten
+                  </th>
 
-                  <th className="p-5 text-left">Type</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Type
+                  </th>
 
-                  <th className="p-5 text-left">AVG</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    AVG
+                  </th>
 
-                  <th className="p-5 text-left">Timeline</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Timeline
+                  </th>
 
-                  <th className="p-5 text-left">TP</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    TP
+                  </th>
 
-                  <th className="p-5 text-left">Profit</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Profit
+                  </th>
 
-                  <th className="p-5 text-left">Status</th>
+                  <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
+                    Status
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredSignals.map((signal) => (
-                  <tr key={signal.id} className="border-t border-zinc-800">
-                    <td className="p-5">{formatDate(signal.tanggal_signal)}</td>
+                  <tr
+                    key={signal.id}
+                    className="border-t border-white/5 hover:bg-white/[0.02] transition-all duration-200"
+                  >
+                    <td className="p-4">{formatDate(signal.tanggal_signal)}</td>
 
-                    <td className="p-5 font-bold text-yellow-400">
+                    <td className="p-5 font-black tracking-tight text-amber-300">
                       {signal.emiten}
                     </td>
 
-                    <td className="p-5">{signal.trading_type}</td>
+                    <td className="p-4">{signal.trading_type}</td>
 
-                    <td className="p-5">{signal.avg || "-"}</td>
+                    <td className="p-4">{signal.avg || "-"}</td>
 
-                    <td className="p-5">
+                    <td className="p-4">
                       <div className="space-y-3 text-sm">
                         {/* ENTRY 1 */}
                         {Number(signal.entry_1) > 0 && (
                           <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-yellow-400 font-bold">ENTRY 1</p>
+                            <p className="text-amber-300 font-bold">ENTRY 1</p>
 
                             <p className="text-white font-semibold">
                               {signal.entry_1}
@@ -490,7 +552,9 @@ export default function HistoryPage() {
                         {/* ENTRY 2 */}
                         {Number(signal.entry_2) > 0 && (
                           <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-blue-400 font-bold">ENTRY 2</p>
+                            <p className="text-emerald-300 font-bold">
+                              ENTRY 2
+                            </p>
 
                             <p className="text-white font-semibold">
                               {signal.entry_2}
@@ -507,7 +571,7 @@ export default function HistoryPage() {
                         {/* ENTRY 3 */}
                         {Number(signal.entry_3) > 0 && (
                           <div className="bg-zinc-800 rounded-2xl p-3">
-                            <p className="text-purple-400 font-bold">ENTRY 3</p>
+                            <p className="text-rose-300 font-bold">ENTRY 3</p>
 
                             <p className="text-white font-semibold">
                               {signal.entry_3}
@@ -523,8 +587,8 @@ export default function HistoryPage() {
 
                         {/* DONE */}
                         {signal.done_date && (
-                          <div className="bg-green-500/10 border border-green-500 rounded-2xl p-3">
-                            <p className="text-green-400 font-bold">DONE</p>
+                          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3">
+                            <p className="text-emerald-400 font-bold">DONE</p>
 
                             <p className="text-zinc-300 text-xs mt-1">
                               {signal.done_date
@@ -536,22 +600,22 @@ export default function HistoryPage() {
                       </div>
                     </td>
 
-                    <td className="p-5">
+                    <td className="p-4">
                       {signal.trading_type === "SWING"
                         ? signal.tp_1 || "-"
                         : signal.tp || "-"}
                     </td>
 
-                    <td className="p-5 text-green-400 font-bold">
+                    <td className="p-5 text-emerald-400 font-bold">
                       {signal.profit_percentage || 0}%
                     </td>
 
-                    <td className="p-5">
+                    <td className="p-4">
                       <span
                         className={
                           signal.status === "DONE"
-                            ? "text-green-400 font-bold"
-                            : "text-red-400 font-bold"
+                            ? "text-emerald-400 font-bold"
+                            : "text-rose-400 font-bold"
                         }
                       >
                         {signal.status}
@@ -563,16 +627,16 @@ export default function HistoryPage() {
             </table>
           </div>
           {/* MOBILE CARD */}
-          <div className="md:hidden space-y-4">
+          <div className="md:hidden space-y-3">
             {filteredSignals.map((signal) => (
               <div
                 key={signal.id}
-                className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5"
+                className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]"
               >
                 {/* TOP */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-3xl font-black text-yellow-400">
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-amber-300">
                       {signal.emiten}
                     </h2>
 
@@ -585,8 +649,8 @@ export default function HistoryPage() {
                     <span
                       className={`px-4 py-2 rounded-2xl text-sm font-bold ${
                         signal.status === "DONE"
-                          ? "bg-green-500/20 text-green-400"
-                          : "bg-red-500/20 text-red-400"
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                       }`}
                     >
                       {signal.status}
@@ -607,7 +671,7 @@ export default function HistoryPage() {
                 <div className="space-y-3 mb-5">
                   {Number(signal.entry_1) > 0 && (
                     <div className="bg-zinc-800 rounded-2xl p-3">
-                      <p className="text-yellow-400 font-bold text-sm">
+                      <p className="text-amber-300 font-bold text-sm">
                         ENTRY 1
                       </p>
 
@@ -623,7 +687,9 @@ export default function HistoryPage() {
 
                   {Number(signal.entry_2) > 0 && (
                     <div className="bg-zinc-800 rounded-2xl p-3">
-                      <p className="text-blue-400 font-bold text-sm">ENTRY 2</p>
+                      <p className="text-emerald-300 font-bold text-sm">
+                        ENTRY 2
+                      </p>
 
                       <p className="text-xl font-bold">{signal.entry_2}</p>
 
@@ -637,9 +703,7 @@ export default function HistoryPage() {
 
                   {Number(signal.entry_3) > 0 && (
                     <div className="bg-zinc-800 rounded-2xl p-3">
-                      <p className="text-purple-400 font-bold text-sm">
-                        ENTRY 3
-                      </p>
+                      <p className="text-rose-300 font-bold text-sm">ENTRY 3</p>
 
                       <p className="text-xl font-bold">{signal.entry_3}</p>
 
@@ -673,7 +737,7 @@ export default function HistoryPage() {
                   <div className="bg-zinc-800 rounded-2xl p-3">
                     <p className="text-zinc-500 text-xs">PROFIT</p>
 
-                    <p className="font-bold text-lg text-green-400">
+                    <p className="font-bold text-lg text-emerald-400">
                       {signal.profit_percentage || 0}%
                     </p>
                   </div>

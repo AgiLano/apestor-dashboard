@@ -31,10 +31,6 @@ export default function Home() {
 
   const [typeFilter, setTypeFilter] = useState("ALL");
 
-  // =========================
-  // AVG DOWN CALCULATOR
-  // =========================
-
   const [avgAwal, setAvgAwal] = useState("");
   const [lotAwal, setLotAwal] = useState("");
 
@@ -261,7 +257,7 @@ export default function Home() {
     },
   ];
 
-  const COLORS = ["#22c55e", "#ef4444"];
+  const COLORS = ["#34d399", "#fb7185"];
 
   const monthlyData = [
     "Jan",
@@ -339,16 +335,16 @@ export default function Home() {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
         {data.map((signal) => (
           <div
             key={signal.id}
-            className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 hover:border-yellow-400 transition-all duration-300"
+            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 hover:border-amber-300/20 hover:shadow-[0_0_30px_rgba(252,211,77,0.08)] hover:-translate-y-1 transition-all duration-300"
           >
             {/* HEADER */}
             <div className="flex justify-between items-start mb-5">
               <div>
-                <h2 className="text-4xl md:text-5xl font-black tracking-tight text-yellow-400">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
                   {signal.emiten}
                 </h2>
 
@@ -358,10 +354,10 @@ export default function Home() {
               </div>
 
               <span
-                className={`px-4 py-2 rounded-full font-bold text-xs md:text-sm ${
+                className={`px-4 py-2 rounded-full font-bold text-xs md:text-sm border ${
                   signal.status === "DONE"
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-red-500/20 text-red-400"
+                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.08)]"
+                    : "bg-rose-500/10 text-rose-300 border-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.08)]"
                 }`}
               >
                 {signal.status}
@@ -369,79 +365,100 @@ export default function Home() {
             </div>
 
             {/* DATA */}
-            <div className="space-y-2 text-sm md:text-lg">
-              <div>
-                <p>
+            <div className="space-y-3 text-sm md:text-base">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-zinc-400">
                   Entry 1:{" "}
-                  <span className="font-bold">{signal.entry_1 || "-"}</span>
+                  <span className="font-black text-zinc-100">
+                    {signal.entry_1 || "-"}
+                  </span>
                 </p>
 
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 whitespace-nowrap">
                   {formatDate(signal.entry_1_date)}
                 </p>
               </div>
 
-              <div>
-                <p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-zinc-400">
                   Entry 2:{" "}
-                  <span className="font-bold">{signal.entry_2 || "-"}</span>
+                  <span className="font-black text-zinc-100">
+                    {signal.entry_2 || "-"}
+                  </span>
                 </p>
 
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 whitespace-nowrap">
                   {signal.entry_2 ? formatDate(signal.entry_2_date) : "-"}
                 </p>
               </div>
-              <div>
-                <p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-zinc-400">
                   Entry 3:{" "}
-                  <span className="font-bold">{signal.entry_3 || "-"}</span>
+                  <span className="font-black text-zinc-100">
+                    {signal.entry_3 || "-"}
+                  </span>
                 </p>
 
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 whitespace-nowrap">
                   {signal.entry_3 ? formatDate(signal.entry_3_date) : "-"}
                 </p>
               </div>
 
-              <p>
-                AVG: <span className="font-bold">{signal.avg || "-"}</span>
+              <p className="text-zinc-400">
+                AVG:{" "}
+                <span className="font-black text-zinc-100">
+                  {signal.avg || "-"}
+                </span>
               </p>
 
               {signal.trading_type === "SWING" ? (
                 <>
-                  <p>
-                    TP1: <span className="font-bold">{signal.tp_1 || "-"}</span>
+                  <p className="text-zinc-400">
+                    TP1:{" "}
+                    <span className="font-black text-zinc-100">
+                      {signal.tp_1 || "-"}
+                    </span>
                   </p>
 
-                  <p>
-                    TP2: <span className="font-bold">{signal.tp_2 || "-"}</span>
+                  <p className="text-zinc-400">
+                    TP2:{" "}
+                    <span className="font-black text-zinc-100">
+                      {signal.tp_2 || "-"}
+                    </span>
                   </p>
 
-                  <p>
-                    TP3: <span className="font-bold">{signal.tp_3 || "-"}</span>
+                  <p className="text-zinc-400">
+                    TP3:{" "}
+                    <span className="font-black text-zinc-100">
+                      {signal.tp_3 || "-"}
+                    </span>
                   </p>
                 </>
               ) : (
-                <p>
-                  TP: <span className="font-bold">{signal.tp || "-"}</span>
+                <p className="text-zinc-400">
+                  TP:{" "}
+                  <span className="font-black text-zinc-100">
+                    {signal.tp || "-"}
+                  </span>
                 </p>
               )}
 
-              <p>
+              <p className="text-zinc-400">
                 High Price:{" "}
-                <span className="text-green-400 font-bold">
+                <span className="font-black text-zinc-100">
                   {signal.high_price || "-"}
                 </span>
               </p>
 
-              <p>
+              <p className="text-zinc-400">
                 Profit:{" "}
-                <span className="text-green-400 font-bold">
+                <span className="font-black tracking-tight text-emerald-400">
                   {signal.profit_percentage || 0}%
                 </span>
               </p>
             </div>
             {/* DATE */}
-            <div className="pt-4 border-t border-zinc-800 mt-4">
+            <div className="pt-4 border-t border-white/5 mt-5">
               <p className="text-zinc-400 text-sm">
                 Signal Date: {formatDate(signal.tanggal_signal)}
               </p>
@@ -470,10 +487,10 @@ export default function Home() {
       <section className="mb-10">
         <button
           onClick={() => toggleSection(keyName)}
-          className="w-full flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-3xl p-5 mb-5 hover:border-yellow-400 transition"
+          className="w-full flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] mb-5 hover:border-amber-300/20 hover:shadow-[0_0_25px_rgba(252,211,77,0.05)] transition-all duration-300"
         >
           <div>
-            <h2 className="text-2xl md:text-5xl font-black text-white text-left tracking-tight">
+            <h2 className="text-2xl md:text-4xl font-bold text-zinc-100 text-left tracking-tight">
               {title}
             </h2>
 
@@ -482,7 +499,7 @@ export default function Home() {
             </p>
           </div>
 
-          <span className="text-3xl md:text-5xl font-bold">
+          <span className="text-2xl md:text-4xl font-semibold text-zinc-400">
             {openSections[keyName] ? "−" : "+"}
           </span>
         </button>
@@ -496,10 +513,10 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-black text-white pt-6 md:pt-10 p-4 md:p-10">
+      <main className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white pt-6 md:pt-10 p-4 md:p-10">
         {/* HEADER */}
         <div className="mb-5">
-          <h1 className="text-5xl md:text-6xl font-black leading-none text-yellow-400">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-none text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
             APESTOR
             <br />
             Dashboard
@@ -511,86 +528,114 @@ export default function Home() {
         </div>
 
         {/* SEARCH + FILTER */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="flex flex-col md:flex-row gap-4 mb-10">
           {/* SEARCH */}
           <input
             type="text"
             placeholder="Search Emiten..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 w-full md:w-96"
+            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl px-4 py-3 w-full md:w-96 text-sm md:text-base focus:outline-none focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
           />
 
           {/* FILTER */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 w-full md:w-64"
+            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl px-4 py-3 w-full md:w-64 text-sm md:text-base focus:outline-none focus:border-amber-300/30 transition-all"
           >
-            <option value="ALL">ALL STATUS</option>
+            <option value="ALL" className="bg-black text-white">
+              ALL STATUS
+            </option>
 
-            <option value="RUNNING">RUNNING</option>
+            <option value="RUNNING" className="bg-black text-white">
+              RUNNING
+            </option>
 
-            <option value="DONE">DONE</option>
+            <option value="DONE" className="bg-black text-white">
+              DONE
+            </option>
           </select>
           {/* TYPE FILTER */}
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-4 w-full md:w-64"
+            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl px-4 py-3 w-full md:w-64 text-sm md:text-base focus:outline-none focus:border-amber-300/30 transition-all"
           >
-            <option value="ALL">ALL TYPE</option>
+            <option value="ALL" className="bg-black text-white">
+              ALL TYPE
+            </option>
 
-            <option value="BSJC">BSJC</option>
+            <option value="BSJC" className="bg-black text-white">
+              BSJC
+            </option>
 
-            <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+            <option value="HAKA PREOPEN" className="bg-black text-white">
+              HAKA PREOPEN
+            </option>
 
-            <option value="LIVE TRADE">LIVE TRADE</option>
+            <option value="LIVE TRADE" className="bg-black text-white">
+              LIVE TRADE
+            </option>
 
-            <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+            <option value="MENU TAMBAHAN" className="bg-black text-white">
+              MENU TAMBAHAN
+            </option>
 
-            <option value="SWING">SWING</option>
+            <option value="SWING" className="bg-black text-white">
+              SWING
+            </option>
           </select>
         </div>
 
         {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
-          <div className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800">
-            <p className="text-zinc-400 text-sm md:text-base">Total Signals</p>
+          <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+              Total Signals
+            </p>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-yellow-400 mt-3">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-3">
               {totalSignals}
             </h2>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800">
-            <p className="text-zinc-400 text-sm md:text-base">Running</p>
+          <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+              Running
+            </p>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-red-400 mt-3">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-rose-400 mt-3">
               {totalRunning}
             </h2>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800">
-            <p className="text-zinc-400 text-sm md:text-base">Done</p>
+          <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+              Done
+            </p>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-green-400 mt-3">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-emerald-400 mt-3">
               {totalDone}
             </h2>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800">
-            <p className="text-zinc-400 text-sm md:text-base">Winrate</p>
+          <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+              Winrate
+            </p>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-blue-400 mt-3">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-blue-400 mt-3">
               {winrate}%
             </h2>
           </div>
 
-          <div className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800">
-            <p className="text-zinc-400 text-sm md:text-base">Avg Profit</p>
+          <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+              Avg Profit
+            </p>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-purple-400 mt-3">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-purple-400 mt-3">
               {avgProfit}%
             </h2>
           </div>
@@ -601,11 +646,11 @@ export default function Home() {
           {typeStats.map((item) => (
             <div
               key={item.type}
-              className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5"
+              className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] hover:border-amber-300/20 hover:-translate-y-1 transition-all duration-300"
             >
               <p className="text-zinc-400 text-sm">{item.type}</p>
 
-              <h2 className="text-4xl font-bold text-yellow-400 mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-3">
                 {item.winrate}%
               </h2>
 
@@ -615,9 +660,9 @@ export default function Home() {
         </div>
 
         {/* SIGNAL STATUS PIE CHART */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 md:p-8 mb-14">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-3xl md:text-5xl font-bold text-yellow-400">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               Signal Status
             </h2>
 
@@ -652,9 +697,9 @@ export default function Home() {
         </div>
 
         {/* PROFIT CHART */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 md:p-8 mb-14">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-3xl md:text-5xl font-bold text-yellow-400">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               Profit Performance
             </h2>
 
@@ -664,7 +709,7 @@ export default function Home() {
           <div className="w-full min-h-[320px] min-w-0 h-72 md:h-96">
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#18181b" />
 
                 <XAxis dataKey="name" stroke="#a1a1aa" />
 
@@ -675,7 +720,7 @@ export default function Home() {
                 <Line
                   type="monotone"
                   dataKey="profit"
-                  stroke="#facc15"
+                  stroke="#fcd34d"
                   strokeWidth={4}
                 />
               </LineChart>
@@ -684,9 +729,9 @@ export default function Home() {
         </div>
 
         {/* MONTHLY PERFORMANCE */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 md:p-8 mb-14">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-3xl md:text-5xl font-bold text-yellow-400">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               Monthly Performance
             </h2>
 
@@ -696,7 +741,7 @@ export default function Home() {
           <div className="w-full min-h-[320px] min-w-0 h-80">
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#18181b" />
 
                 <XAxis dataKey="month" stroke="#a1a1aa" />
 
@@ -707,7 +752,7 @@ export default function Home() {
                 <Line
                   type="monotone"
                   dataKey="profit"
-                  stroke="#22c55e"
+                  stroke="#34d399"
                   strokeWidth={4}
                 />
               </LineChart>
@@ -716,9 +761,9 @@ export default function Home() {
         </div>
 
         {/* TOP EMITEN */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 md:p-8 mb-14">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-3xl md:text-5xl font-bold text-yellow-400">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
               Top Profit Emiten
             </h2>
 
@@ -729,24 +774,26 @@ export default function Home() {
             {bestEmitens.map((item: any, index) => (
               <div
                 key={item.emiten}
-                className="flex items-center justify-between bg-black border border-zinc-800 rounded-2xl p-5"
+                className="flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl p-4 md:p-5 hover:border-amber-300/20 hover:shadow-[0_0_25px_rgba(252,211,77,0.06)] transition-all"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-yellow-400 text-black font-black flex items-center justify-center text-xl">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-300 text-black font-black flex items-center justify-center text-lg md:text-xl shadow-[0_0_20px_rgba(252,211,77,0.15)]">
                     {index + 1}
                   </div>
 
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="text-xl md:text-2xl font-black tracking-tight text-zinc-100">
                       {item.emiten}
                     </h3>
 
-                    <p className="text-zinc-500">Top Performing Signal</p>
+                    <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
+                      Top Performing Signal
+                    </p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <h2 className="text-3xl font-black text-green-400">
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tight text-emerald-400">
                     +{item.totalProfit.toFixed(2)}%
                   </h2>
                 </div>
@@ -757,9 +804,9 @@ export default function Home() {
 
         {/* AVG DOWN CALCULATOR */}
         <section className="mt-8 md:mt-12 mb-10">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 md:p-6 max-w-5xl mx-auto">
+          <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 md:p-6 max-w-5xl mx-auto shadow-[0_0_40px_rgba(0,0,0,0.25)]">
             <div className="mb-6">
-              <h2 className="text-2xl md:text-5xl font-black text-yellow-400">
+              <h2 className="text-2xl md:text-4xl font-black text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
                 AVG DOWN
               </h2>
 
@@ -775,7 +822,7 @@ export default function Home() {
                 placeholder="Avg Awal"
                 value={avgAwal}
                 onChange={(e) => setAvgAwal(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+                className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-xl px-3 py-2 text-xs md:text-sm focus:outline-none focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
 
               <input
@@ -783,7 +830,7 @@ export default function Home() {
                 placeholder="Lot Awal"
                 value={lotAwal}
                 onChange={(e) => setLotAwal(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+                className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-xl px-3 py-2 text-xs md:text-sm focus:outline-none focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
 
               <input
@@ -791,7 +838,7 @@ export default function Home() {
                 placeholder="Harga Avg Down"
                 value={avgDown}
                 onChange={(e) => setAvgDown(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+                className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-xl px-3 py-2 text-xs md:text-sm focus:outline-none focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
 
               <input
@@ -799,23 +846,23 @@ export default function Home() {
                 placeholder="Lot Tambahan"
                 value={lotTambahan}
                 onChange={(e) => setLotTambahan(e.target.value)}
-                className="bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs md:text-sm"
+                className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-xl px-3 py-2 text-xs md:text-sm focus:outline-none focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
               />
             </div>
 
             {/* BUTTON */}
             <button
               onClick={hitungAvgDown}
-              className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl py-2.5 text-sm transition mb-4"
+              className="w-full bg-amber-300 hover:bg-amber-200 text-black font-bold rounded-xl py-2.5 text-sm transition-all duration-300 hover:shadow-[0_0_25px_rgba(252,211,77,0.15)] mb-4"
             >
               HITUNG AVG
             </button>
 
             {/* RESULT */}
-            <div className="bg-black border border-zinc-800 rounded-2xl p-4">
+            <div className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-2xl p-4 shadow-[0_0_25px_rgba(0,0,0,0.25)]">
               <p className="text-zinc-400 text-sm">AVG BARU</p>
 
-              <h2 className="text-2xl md:text-4xl font-black text-yellow-400 mt-1">
+              <h2 className="text-2xl md:text-4xl font-black text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-1">
                 {hasilAvg || 0}
               </h2>
 
@@ -823,13 +870,15 @@ export default function Home() {
                 <div>
                   <p className="text-zinc-500 text-sm">Total Lot</p>
 
-                  <h3 className="text-lg md:text-2xl font-bold">{totalLot}</h3>
+                  <h3 className="text-lg md:text-2xl font-black tracking-tight">
+                    {totalLot}
+                  </h3>
                 </div>
 
                 <div>
                   <p className="text-zinc-500 text-sm">Total Modal</p>
 
-                  <h3 className="text-lg md:text-2xl font-bold text-green-400">
+                  <h3 className="text-lg md:text-2xl font-black tracking-tight text-emerald-400">
                     Rp {totalModal.toLocaleString("id-ID")}
                   </h3>
                 </div>
