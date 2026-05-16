@@ -247,6 +247,7 @@ export default function HistoryPage() {
 
     try {
       element.classList.remove("hidden");
+      element.style.display = "block";
 
       const dataUrl = await toPng(element, {
         cacheBust: true,
@@ -264,6 +265,7 @@ export default function HistoryPage() {
       console.error("Download image error:", error);
     } finally {
       element.className = originalClass;
+      element.style.display = "";
     }
   }
 
@@ -445,10 +447,7 @@ rounded-2xl
             </div>
           </div>
 
-          <div
-            id="history-image"
-            className="hidden md:block bg-black p-8 rounded-3xl"
-          >
+          <div id="history-image" className="bg-black p-8 rounded-3xl hidden">
             {/* TABLE */}
             <div className="hidden md:block bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
               <table className="w-full">
