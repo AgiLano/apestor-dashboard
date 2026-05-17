@@ -176,6 +176,18 @@ export default function AdminPage() {
   // SAVE SIGNAL
   // =========================
 
+  function formatLocalDate(date: Date | null) {
+    if (!date) return null;
+
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
   async function saveSignal() {
     if (!emiten || !tradingType) {
       toast.error("Lengkapi data terlebih dahulu!");
@@ -185,20 +197,18 @@ export default function AdminPage() {
     setLoading(true);
 
     const payload = {
-      tanggal_signal: signalDate
-        ? signalDate.toISOString().split("T")[0]
-        : null,
+      tanggal_signal: formatLocalDate(signalDate),
       emiten: emiten.toUpperCase(),
 
       trading_type: tradingType,
       entry_1: entry1 ? Number(entry1) : null,
-      entry_1_date: entry1Date ? entry1Date.toISOString().split("T")[0] : null,
+      entry_1_date: formatLocalDate(entry1Date),
 
       entry_2: entry2 ? Number(entry2) : null,
-      entry_2_date: entry2Date ? entry2Date.toISOString().split("T")[0] : null,
+      entry_2_date: formatLocalDate(entry2Date),
 
       entry_3: entry3 ? Number(entry3) : null,
-      entry_3_date: entry3Date ? entry3Date.toISOString().split("T")[0] : null,
+      entry_3_date: formatLocalDate(entry3Date),
 
       avg: Number(avg),
 
@@ -212,10 +222,7 @@ export default function AdminPage() {
 
       status,
 
-      done_date:
-        status === "DONE" && doneDate
-          ? doneDate.toISOString().split("T")[0]
-          : null,
+      done_date: status === "DONE" ? formatLocalDate(doneDate) : null,
 
       high_price: Number(highPrice),
 
@@ -795,7 +802,7 @@ shadow-amber-300/10
 
                       setSignalDate(
                         signal.tanggal_signal
-                          ? new Date(signal.tanggal_signal)
+                          ? new Date(signal.tanggal_signal + "t00:00:00")
                           : null,
                       );
 
@@ -955,7 +962,7 @@ font-bold
 
                             setSignalDate(
                               signal.tanggal_signal
-                                ? new Date(signal.tanggal_signal)
+                                ? new Date(signal.tanggal_signal + "t00:00:00")
                                 : null,
                             );
 
