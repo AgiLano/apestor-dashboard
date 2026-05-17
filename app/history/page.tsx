@@ -185,6 +185,18 @@ export default function HistoryPage() {
     autoTable(doc, {
       startY: 80,
 
+      didDrawPage: () => {
+        doc.setFillColor(0, 0, 0);
+
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.width,
+          doc.internal.pageSize.height,
+          "F",
+        );
+      },
+
       head: [
         ["Date", "Emiten", "Type", "AVG", "Timeline", "TP", "Profit", "Status"],
       ],
@@ -252,7 +264,7 @@ export default function HistoryPage() {
       const dataUrl = await toPng(element, {
         cacheBust: true,
         backgroundColor: "#000000",
-        pixelRatio: 2,
+        pixelRatio: 3,
       });
 
       const link = document.createElement("a");
@@ -449,11 +461,11 @@ rounded-2xl
 
           <div
             id="history-image"
-            className="bg-black p-8 rounded-3xl hidden w-[1600px]"
+            className="bg-black p-8 rounded-3xl overflow-x-auto"
           >
             {/* TABLE */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
-              <table className="w-full">
+              <table className="w-full min-w-[1400px]">
                 <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-zinc-800">
                   <tr>
                     <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
