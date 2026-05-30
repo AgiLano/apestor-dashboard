@@ -1,27 +1,30 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const body = await req.json();
+    const webhook = process.env.DISCORD_WEBHOOK_URL;
 
-    await fetch(process.env.DISCORD_WEBHOOK_URL!, {
+    const response = await fetch(webhook!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        content: body.message,
+        content: "🚀 TEST NOTIFIKASI RISE BERHASIL",
       }),
     });
 
+    const result = await response.text();
+
     return NextResponse.json({
       success: true,
+      discord: result,
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error,
+        error: String(error),
       },
       {
         status: 500,

@@ -313,20 +313,42 @@ export default function AdminPage() {
       },
       body: JSON.stringify({
         message: editingId
-          ? `✏️ SIGNAL UPDATE
+          ? `✏️ **SIGNAL UPDATE RISE**
 
-📈 ${emiten}
-📊 ${tradingType}
+📈 Emiten : ${emiten}
+📊 Type : ${tradingType}
 
-AVG : ${avg}
-STATUS : ${status}`
-          : `🚀 SIGNAL BARU
+💰 Entry 1 : ${entry1 || "-"}
+💰 Entry 2 : ${entry2 || "-"}
+💰 Entry 3 : ${entry3 || "-"}
 
-📈 ${emiten}
-📊 ${tradingType}
+📌 AVG : ${avg}
 
-AVG : ${avg}
-STATUS : ${status}`,
+🎯 TP : ${
+              tradingType === "SWING"
+                ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
+                : tp
+            }
+
+📍 Status : ${status}`
+          : `🚀 **SIGNAL BARU RISE**
+
+📈 Emiten : ${emiten}
+📊 Type : ${tradingType}
+
+💰 Entry 1 : ${entry1 || "-"}
+💰 Entry 2 : ${entry2 || "-"}
+💰 Entry 3 : ${entry3 || "-"}
+
+📌 AVG : ${avg}
+
+🎯 TP : ${
+              tradingType === "SWING"
+                ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
+                : tp
+            }
+
+📍 Status : ${status}`,
       }),
     });
 

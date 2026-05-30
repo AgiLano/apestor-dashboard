@@ -10,9 +10,14 @@ export async function GET(req: Request) {
     const symbol = searchParams.get("symbol");
 
     if (!symbol) {
-      return NextResponse.json({
-        error: "Symbol required",
-      });
+      return NextResponse.json(
+        {
+          error: "Symbol required",
+        },
+        {
+          status: 400,
+        },
+      );
     }
 
     let yahooSymbol = symbol;
@@ -20,9 +25,7 @@ export async function GET(req: Request) {
     // IHSG
     if (symbol === "^JKSE") {
       yahooSymbol = "^JKSE";
-    }
-    // Emiten Indonesia
-    else {
+    } else {
       yahooSymbol = `${symbol.toUpperCase()}.JK`;
     }
 
