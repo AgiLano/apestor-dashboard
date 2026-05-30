@@ -183,7 +183,7 @@ export default function HistoryPage() {
 
     doc.setFontSize(26);
 
-    doc.text("APESTOR HISTORY RECAP", 14, 20);
+    doc.text("RISE HISTORY RECAP", 14, 20);
 
     doc.setTextColor(255, 255, 255);
 
@@ -260,7 +260,7 @@ export default function HistoryPage() {
       },
     });
 
-    doc.save("apestor-history.pdf");
+    doc.save("rise-history.pdf");
   }
 
   // =========================
@@ -286,7 +286,7 @@ export default function HistoryPage() {
 
       const link = document.createElement("a");
 
-      link.download = "apestor-history.png";
+      link.download = "rise-history.png";
       link.href = dataUrl;
 
       link.click();

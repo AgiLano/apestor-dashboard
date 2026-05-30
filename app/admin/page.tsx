@@ -234,6 +234,11 @@ export default function AdminPage() {
 
     setLoading(true);
 
+    const targetPercent =
+      avg && tp
+        ? (((Number(tp) - Number(avg)) / Number(avg)) * 100).toFixed(2)
+        : "0";
+
     const payload = {
       tanggal_signal: formatLocalDate(signalDate),
       emiten: emiten.toUpperCase(),
@@ -315,8 +320,10 @@ export default function AdminPage() {
         message: editingId
           ? `✏️ **SIGNAL UPDATE RISE**
 
-📈 Emiten : ${emiten}
-📊 Type : ${tradingType}
+🕒 ${currentTime} WIB
+
+📈 ${emiten}
+📊 ${tradingType}
 
 💰 Entry 1 : ${entry1 || "-"}
 💰 Entry 2 : ${entry2 || "-"}
@@ -324,36 +331,35 @@ export default function AdminPage() {
 
 📌 AVG : ${avg}
 
-🎯 TP : ${
+🎯 Target : ${
               tradingType === "SWING"
                 ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
-                : tp
+                : `${tp} (+${targetPercent}%)`
             }
 
-📍 Status : ${status}`
+📍 Status : ${status}
+
+🌐 RITEL SOCIETY`
           : `🚀 **SIGNAL BARU RISE**
 
-📈 **Emiten**
-${emiten}
+🕒 ${currentTime} WIB
 
-📊 **Strategy**
-${tradingType}
+📈 ${emiten}
+📊 ${tradingType}
 
-💰 **Entry**
-• Entry 1 : ${entry1 || "-"}
-• Entry 2 : ${entry2 || "-"}
-• Entry 3 : ${entry3 || "-"}
+💰 Entry 1 : ${entry1 || "-"}
+💰 Entry 2 : ${entry2 || "-"}
+💰 Entry 3 : ${entry3 || "-"}
 
-📌 **AVG**
-${avg}
+📌 AVG : ${avg}
 
-🎯 **Target**
-${
-  tradingType === "SWING" ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}` : tp
-}
+🎯 Target : ${
+              tradingType === "SWING"
+                ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
+                : `${tp} (+${targetPercent}%)`
+            }
 
-📍 **Status**
-${status}
+📍 Status : ${status}
 
 🌐 RITEL SOCIETY`,
       }),

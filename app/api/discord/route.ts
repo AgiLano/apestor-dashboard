@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const body = await req.json();
 
     const webhook = process.env.DISCORD_WEBHOOK_URL;
 
@@ -13,14 +13,38 @@ export async function POST(req: Request) {
       );
     }
 
+    let payload: any = {};
+
+    // MODE EMBED
+    if (body.embed) {
+      payload = {
+        embeds: [
+          {
+            title: body.embed.title,
+            description: body.embed.description,
+            color: body.embed.color || 0xfcd34d,
+            footer: {
+              text: "RITEL SOCIETY",
+            },
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      };
+    }
+
+    // MODE LAMA (TEXT)
+    else {
+      payload = {
+        content: body.message,
+      };
+    }
+
     const response = await fetch(webhook, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        content: message,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const result = await response.text();
