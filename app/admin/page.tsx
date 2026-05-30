@@ -331,31 +331,31 @@ export default function AdminPage() {
             }
 
 📍 Status : ${status}`
-          : `
-          ━━━━━━━━━━━━━━━━━━
-         🚀 SIGNAL BARU RISE
-          ━━━━━━━━━━━━━━━━━━
+          : `🚀 **SIGNAL BARU RISE**
 
-📈 Emiten     : ${emiten}
-📊 Strategy   : ${tradingType}
+📈 **Emiten**
+${emiten}
 
-💰 Entry 1    : ${entry1 || "-"}
-💰 Entry 2    : ${entry2 || "-"}
-💰 Entry 3    : ${entry3 || "-"}
+📊 **Strategy**
+${tradingType}
 
-📌 AVG        : ${avg}
+💰 **Entry**
+• Entry 1 : ${entry1 || "-"}
+• Entry 2 : ${entry2 || "-"}
+• Entry 3 : ${entry3 || "-"}
 
-🎯 Target     : ${
-              tradingType === "SWING"
-                ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
-                : tp
-            }
+📌 **AVG**
+${avg}
 
-📍 Status     : ${status}
+🎯 **Target**
+${
+  tradingType === "SWING" ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}` : tp
+}
 
-━━━━━━━━━━━━━━━━━━
-🌐 RITEL SOCIETY
-━━━━━━━━━━━━━━━━━━`,
+📍 **Status**
+${status}
+
+🌐 RITEL SOCIETY`,
       }),
     });
 
