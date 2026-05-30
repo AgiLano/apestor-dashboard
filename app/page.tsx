@@ -541,7 +541,7 @@ export default function Home() {
         {/* HEADER */}
         <div className="mb-5">
           <h1 className="text-3xl md:text-5xl font-black leading-none text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
-            APESTOR
+            RISE
             <br />
             Dashboard
           </h1>

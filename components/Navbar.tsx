@@ -29,16 +29,16 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <img
             src="/logo-navbar.png"
-            alt="APESTOR"
+            alt="RISE"
             className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 object-contain bg-black p-1"
           />
 
           <div>
             <h1 className="text-lg md:text-2xl font-black text-yellow-400 tracking-wide">
-              APESTOR
+              RISE
             </h1>
 
-            <p className="text-xs text-zinc-500">Grup Ritel Unyu</p>
+            <p className="text-xs text-zinc-500">Ritel Society</p>
           </div>
         </div>
 

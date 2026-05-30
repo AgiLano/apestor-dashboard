@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "APESTOR Dashboard",
+  title: "RISE Dashboard",
 
   description: "Realtime Trading Community Dashboard",
 

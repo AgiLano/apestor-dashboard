@@ -415,7 +415,7 @@ export default function AdminPage() {
             </h1>
 
             <p className="text-zinc-500 mt-3 text-sm md:text-base">
-              Kelola signal trading APESTOR
+              Kelola signal trading RISE
             </p>
           </div>
 
