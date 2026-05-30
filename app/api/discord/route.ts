@@ -8,14 +8,18 @@ export async function POST(req: Request) {
 
     if (!webhook) {
       return NextResponse.json(
-        { error: "Webhook URL missing" },
-        { status: 500 },
+        {
+          success: false,
+          error: "Webhook URL missing",
+        },
+        {
+          status: 500,
+        },
       );
     }
 
-    let payload: any = {};
+    let payload: any;
 
-    // MODE EMBED
     if (body.embed) {
       payload = {
         embeds: [
@@ -24,21 +28,16 @@ export async function POST(req: Request) {
             description: body.embed.description,
             fields: body.embed.fields || [],
             color: body.embed.color || 0xfcd34d,
-
             footer: {
               text:
                 body.embed.footer ||
                 "RITEL SOCIETY • Premium Trading Community",
             },
-
             timestamp: body.embed.timestamp || new Date().toISOString(),
           },
         ],
       };
-    }
-
-    // MODE LAMA (TEXT)
-    else {
+    } else {
       payload = {
         content: body.message,
       };
@@ -54,11 +53,18 @@ export async function POST(req: Request) {
 
     const result = await response.text();
 
+    console.log("DISCORD STATUS:", response.status);
+    console.log("DISCORD RESPONSE:", result);
+
     return NextResponse.json({
-      success: true,
+      success: response.ok,
+      status: response.status,
       discord: result,
+      payload,
     });
   } catch (error) {
+    console.error("DISCORD ERROR:", error);
+
     return NextResponse.json(
       {
         success: false,
