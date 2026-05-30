@@ -306,6 +306,30 @@ export default function AdminPage() {
       editingId ? "Signal berhasil diupdate!" : "Signal berhasil disimpan!",
     );
 
+    await fetch("/api/discord", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: editingId
+          ? `✏️ SIGNAL UPDATE
+
+📈 ${emiten}
+📊 ${tradingType}
+
+AVG : ${avg}
+STATUS : ${status}`
+          : `🚀 SIGNAL BARU
+
+📈 ${emiten}
+📊 ${tradingType}
+
+AVG : ${avg}
+STATUS : ${status}`,
+      }),
+    });
+
     // RESET
     setEditingId(null);
 
