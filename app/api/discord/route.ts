@@ -22,11 +22,16 @@ export async function POST(req: Request) {
           {
             title: body.embed.title,
             description: body.embed.description,
+            fields: body.embed.fields || [],
             color: body.embed.color || 0xfcd34d,
+
             footer: {
-              text: "RITEL SOCIETY",
+              text:
+                body.embed.footer ||
+                "RITEL SOCIETY • Premium Trading Community",
             },
-            timestamp: new Date().toISOString(),
+
+            timestamp: body.embed.timestamp || new Date().toISOString(),
           },
         ],
       };
