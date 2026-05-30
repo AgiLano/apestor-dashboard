@@ -75,3 +75,59 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: #fcd34d;
 }
+
+/* PREMIUM DATEPICKER */
+
+.premium-calendar {
+  background: #09090b !important;
+  border: 1px solid #27272a !important;
+  border-radius: 20px !important;
+  padding: 10px !important;
+  font-family: inherit !important;
+  color: white !important;
+}
+
+.react-datepicker {
+  background: #09090b !important;
+  border: 1px solid #27272a !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+.react-datepicker__header {
+  background: #111111 !important;
+  border-bottom: 1px solid #27272a !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #fcd34d !important;
+  font-weight: 700 !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: white !important;
+}
+
+.react-datepicker__day:hover {
+  background: #27272a !important;
+  border-radius: 999px !important;
+}
+
+.react-datepicker__day--selected {
+  background: #fcd34d !important;
+  color: black !important;
+  border-radius: 999px !important;
+  font-weight: bold !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #fcd34d !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}

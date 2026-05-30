@@ -7,6 +7,7 @@ import { supabase } from "../../lib/supabase";
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import MiniTradingView from "@/components/MiniTradingView";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -33,6 +34,14 @@ export default function AdminPage() {
   // =========================
 
   const [emiten, setEmiten] = useState("");
+  const [currentMarket, setCurrentMarket] = useState({
+    price: "LIVE",
+    change: "+0.00%",
+    open: "-",
+    high: "-",
+    low: "-",
+    volume: "-",
+  });
 
   const [tradingType, setTradingType] = useState("");
 
@@ -72,6 +81,35 @@ export default function AdminPage() {
 
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  const currentTime = new Date().toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  useEffect(() => {
+    const fetchMarket = async () => {
+      try {
+        const marketSymbol = !emiten ? "^JKSE" : emiten;
+
+        const res = await fetch(`/api/market?symbol=${marketSymbol}`);
+        const data = await res.json();
+
+        setCurrentMarket({
+          price: data.price?.toString() || "-",
+          change:
+            data.change !== undefined ? `${data.change.toFixed(2)}%` : "0.00%",
+          open: data.open?.toString() || "-",
+          high: data.high?.toString() || "-",
+          low: data.low?.toString() || "-",
+          volume: data.volume?.toLocaleString() || "-",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMarket();
+  }, [emiten]);
   // =========================
   // AUTH CHECK
   // =========================
@@ -396,220 +434,324 @@ export default function AdminPage() {
         </div>
 
         {/* FORM */}
-        <div className="w-full max-w-4xl bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 md:p-8 shadow-[0_0_60px_rgba(0,0,0,0.35)] space-y-4 md:space-y-5">
-          {/* EMITEN */}
-          <input
-            type="text"
-            placeholder="Emiten"
-            value={emiten}
-            onChange={(e) => setEmiten(e.target.value)}
-            className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-          />
-
-          {/* TRADING TYPE */}
-          <select
-            value={tradingType}
-            onChange={(e) => setTradingType(e.target.value)}
-            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-          >
-            <option value="" className="bg-black text-white">
-              Pilih Trading Type
-            </option>
-
-            <option value="HAKA PREOPEN" className="bg-black text-white">
-              HAKA PREOPEN
-            </option>
-
-            <option value="BSJC" className="bg-black text-white">
-              BSJC
-            </option>
-
-            <option value="LIVE TRADE" className="bg-black text-white">
-              LIVE TRADE
-            </option>
-
-            <option value="MENU TAMBAHAN" className="bg-black text-white">
-              MENU TAMBAHAN
-            </option>
-
-            <option value="SWING" className="bg-black text-white">
-              SWING
-            </option>
-          </select>
-
-          {/* SIGNAL DATE */}
-          <div className="mb-4">
-            <p className="text-zinc-400 mb-2">Signal Date</p>
-
-            <DatePicker
-              selected={signalDate}
-              onChange={(date: Date | null) => setSignalDate(date)}
-              dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              placeholderText="Pilih tanggal signal"
-            />
-          </div>
-
-          {/* ENTRY 1 */}
-          <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          <div className="w-full xl:col-span-8 bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 md:p-8 shadow-[0_0_60px_rgba(0,0,0,0.35)] space-y-4 md:space-y-5">
+            {/* EMITEN */}
             <input
-              type="number"
-              placeholder="Entry 1"
-              value={entry1}
-              onChange={(e) => setEntry1(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              type="text"
+              placeholder="Masukkan kode emiten..."
+              value={emiten}
+              onChange={(e) => setEmiten(e.target.value.toUpperCase())}
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] uppercase tracking-widest font-bold transition-all"
             />
 
-            <DatePicker
-              selected={entry1Date}
-              onChange={(date: Date | null) => setEntry1Date(date)}
-              dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              placeholderText="Pilih tanggal"
-            />
-          </div>
-
-          {/* ENTRY 2 */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="number"
-              placeholder="Entry 2"
-              value={entry2}
-              onChange={(e) => setEntry2(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-            />
-
-            <DatePicker
-              selected={entry2Date}
-              onChange={(date: Date | null) => setEntry2Date(date)}
-              dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              placeholderText="Pilih tanggal"
-            />
-          </div>
-
-          {/* ENTRY 3 */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="number"
-              placeholder="Entry 3"
-              value={entry3}
-              onChange={(e) => setEntry3(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-            />
-
-            <DatePicker
-              selected={entry3Date}
-              onChange={(date: Date | null) => setEntry3Date(date)}
-              dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              placeholderText="Pilih tanggal"
-            />
-          </div>
-
-          {/* AVG */}
-          <div>
-            <label className="block text-zinc-400 mb-2 font-semibold">
-              AVG (AUTO)
-            </label>
-
-            <div className="w-full bg-amber-300/10 border border-amber-300/20 text-amber-200 rounded-2xl p-4 font-black tracking-tight text-xl">
-              {avg || "0"}
-            </div>
-          </div>
-
-          {/* TP */}
-          {tradingType !== "SWING" && (
-            <input
-              type="number"
-              placeholder="TP"
-              value={tp}
-              onChange={(e) => setTp(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-            />
-          )}
-
-          {/* SWING */}
-          {tradingType === "SWING" && (
-            <div className="grid md:grid-cols-3 gap-4">
-              <input
-                type="number"
-                placeholder="TP 1"
-                value={tp1}
-                onChange={(e) => setTp1(e.target.value)}
-                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              />
-
-              <input
-                type="number"
-                placeholder="TP 2"
-                value={tp2}
-                onChange={(e) => setTp2(e.target.value)}
-                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              />
-
-              <input
-                type="number"
-                placeholder="TP 3"
-                value={tp3}
-                onChange={(e) => setTp3(e.target.value)}
-                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              />
-            </div>
-          )}
-
-          {/* STATUS */}
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-          >
-            <option value="RUNNING" className="bg-black text-white">
-              RUNNING
-            </option>
-
-            <option value="DONE" className="bg-black text-white">
-              DONE
-            </option>
-          </select>
-
-          {status === "DONE" && (
-            <DatePicker
-              selected={doneDate}
-              onChange={(date: Date | null) => setDoneDate(date)}
-              dateFormat="EEEE, d MMMM yyyy"
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-              placeholderText="Pilih tanggal DONE"
-            />
-          )}
-
-          {/* HIGH PRICE */}
-          <input
-            type="number"
-            placeholder="High Price"
-            value={highPrice}
-            onChange={(e) => setHighPrice(e.target.value)}
-            className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-          />
-
-          {/* PROFIT */}
-          <div>
-            <label className="block text-zinc-400 mb-2 font-semibold">
-              PROFIT PERCENTAGE (AUTO)
-            </label>
-
-            <div
-              className={`w-full rounded-2xl p-4 font-bold text-xl border ${
-                Number(profitPercentage) >= 0
-                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                  : "bg-rose-500/10 border-rose-500/20 text-rose-400"
-              }`}
+            {/* TRADING TYPE */}
+            <select
+              value={tradingType}
+              onChange={(e) => setTradingType(e.target.value)}
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
             >
-              {profitPercentage || "0"}%
+              <option value="" className="bg-black text-white">
+                Pilih Trading Type
+              </option>
+
+              <option value="HAKA PREOPEN" className="bg-black text-white">
+                HAKA PREOPEN
+              </option>
+
+              <option value="BSJC" className="bg-black text-white">
+                BSJC
+              </option>
+
+              <option value="LIVE TRADE" className="bg-black text-white">
+                LIVE TRADE
+              </option>
+
+              <option value="MENU TAMBAHAN" className="bg-black text-white">
+                MENU TAMBAHAN
+              </option>
+
+              <option value="SWING" className="bg-black text-white">
+                SWING
+              </option>
+            </select>
+
+            {/* SIGNAL DATE */}
+            <div className="mb-4">
+              <p className="text-zinc-400 mb-2">Signal Date</p>
+
+              <DatePicker
+                selected={signalDate}
+                onChange={(date: Date | null) => setSignalDate(date)}
+                dateFormat="EEEE, d MMMM yyyy"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholderText="Pilih tanggal signal"
+              />
             </div>
+
+            {/* ENTRY 1 */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <input
+                type="number"
+                placeholder="Entry 1"
+                value={entry1}
+                onChange={(e) => setEntry1(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              />
+
+              <DatePicker
+                selected={entry1Date}
+                onChange={(date: Date | null) => setEntry1Date(date)}
+                dateFormat="EEEE, d MMMM yyyy"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholderText="Pilih tanggal"
+              />
+            </div>
+
+            {/* ENTRY 2 */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <input
+                type="number"
+                placeholder="Entry 2"
+                value={entry2}
+                onChange={(e) => setEntry2(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              />
+
+              <DatePicker
+                selected={entry2Date}
+                onChange={(date: Date | null) => setEntry2Date(date)}
+                dateFormat="EEEE, d MMMM yyyy"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholderText="Pilih tanggal"
+              />
+            </div>
+
+            {/* ENTRY 3 */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <input
+                type="number"
+                placeholder="Entry 3"
+                value={entry3}
+                onChange={(e) => setEntry3(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              />
+
+              <DatePicker
+                selected={entry3Date}
+                onChange={(date: Date | null) => setEntry3Date(date)}
+                dateFormat="EEEE, d MMMM yyyy"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholderText="Pilih tanggal"
+              />
+            </div>
+
+            {/* AVG */}
+            <div>
+              <label className="block text-zinc-400 mb-2 font-semibold">
+                AVG (AUTO)
+              </label>
+
+              <div className="w-full bg-amber-300/10 border border-amber-300/20 text-amber-200 rounded-2xl p-4 font-black tracking-tight text-xl">
+                {avg || "0"}
+              </div>
+            </div>
+
+            {/* TP */}
+            {tradingType !== "SWING" && (
+              <input
+                type="number"
+                placeholder="TP"
+                value={tp}
+                onChange={(e) => setTp(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+              />
+            )}
+
+            {/* SWING */}
+            {tradingType === "SWING" && (
+              <div className="grid md:grid-cols-3 gap-4">
+                <input
+                  type="number"
+                  placeholder="TP 1"
+                  value={tp1}
+                  onChange={(e) => setTp1(e.target.value)}
+                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                />
+
+                <input
+                  type="number"
+                  placeholder="TP 2"
+                  value={tp2}
+                  onChange={(e) => setTp2(e.target.value)}
+                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                />
+
+                <input
+                  type="number"
+                  placeholder="TP 3"
+                  value={tp3}
+                  onChange={(e) => setTp3(e.target.value)}
+                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                />
+              </div>
+            )}
+
+            {/* STATUS */}
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+            >
+              <option value="RUNNING" className="bg-black text-white">
+                RUNNING
+              </option>
+
+              <option value="DONE" className="bg-black text-white">
+                DONE
+              </option>
+            </select>
+
+            {status === "DONE" && (
+              <DatePicker
+                selected={doneDate}
+                onChange={(date: Date | null) => setDoneDate(date)}
+                dateFormat="EEEE, d MMMM yyyy"
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholderText="Pilih tanggal DONE"
+              />
+            )}
+
+            {/* HIGH PRICE */}
+            <input
+              type="number"
+              placeholder="High Price"
+              value={highPrice}
+              onChange={(e) => setHighPrice(e.target.value)}
+              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+            />
+
+            {/* PROFIT */}
+            <div>
+              <label className="block text-zinc-400 mb-2 font-semibold">
+                PROFIT PERCENTAGE (AUTO)
+              </label>
+
+              <div
+                className={`w-full rounded-2xl p-4 font-bold text-xl border ${
+                  Number(profitPercentage) >= 0
+                    ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                    : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                }`}
+              >
+                {profitPercentage || "0"}%
+              </div>
+            </div>
+          </div>
+          <div className="sticky top-28 self-start xl:col-span-4 bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-6 shadow-[0_0_60px_rgba(0,0,0,0.35)]">
+            <h2 className="text-xl md:text-2xl font-black text-amber-300 mb-6 tracking-tight">
+              MARKET INFO
+            </h2>
+
+            {currentMarket ? (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-2xl p-4">
+                  <div>
+                    <p className="text-zinc-500 text-xs">SYMBOL</p>
+
+                    <h3 className="text-white font-bold mt-1">
+                      {emiten ? `IDX:${emiten}` : "INDEX:JKSE"}
+                    </h3>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-zinc-500 text-xs tracking-widest">
+                      CONNECTION STATUS
+                    </p>
+                    <h3
+                      className={`font-bold mt-1 ${
+                        emiten ? "text-emerald-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {emiten ? "● MARKET ACTIVE" : "Waiting Symbol..."}
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-zinc-400 text-sm font-semibold tracking-wide">
+                    LIVE MARKET PRICE
+                  </p>
+                  <p className="text-zinc-600 text-xs mt-1">
+                    Last update {currentTime} WIB
+                  </p>
+
+                  <div className="flex items-center gap-3 mt-2 animate-pulse">
+                    <h1
+                      className={`text-4xl md:text-5xl font-black tracking-tight ${
+                        currentMarket.change.includes("-")
+                          ? "text-rose-400"
+                          : "text-white"
+                      }`}
+                    >
+                      {currentMarket.price}
+                    </h1>
+
+                    <span
+                      className={`font-bold text-lg ${
+                        currentMarket.change.includes("-")
+                          ? "text-rose-400"
+                          : "text-emerald-400"
+                      }`}
+                    >
+                      {currentMarket.change}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 border border-white/5">
+                    <p className="text-zinc-500 text-sm">OPEN</p>
+
+                    <h3 className="text-white text-xl font-bold mt-1">
+                      {currentMarket.open}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 border border-white/5">
+                    <p className="text-zinc-500 text-sm">HIGH</p>
+
+                    <h3 className="text-emerald-400 text-xl font-bold mt-1">
+                      {currentMarket.high}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 border border-white/5">
+                    <p className="text-zinc-500 text-sm">LOW</p>
+
+                    <h3 className="text-rose-400 text-xl font-bold mt-1">
+                      {currentMarket.low}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 border border-white/5">
+                    <p className="text-zinc-500 text-sm">VOL</p>
+
+                    <h3 className="text-cyan-400 text-xl font-bold mt-1">
+                      {currentMarket.volume}
+                    </h3>
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <MiniTradingView
+                    symbol={emiten ? `IDX:${emiten}` : "INDEX:JKSE"}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="text-zinc-500">Ketik kode emiten...</div>
+            )}
           </div>
         </div>
-
         {/* BUTTON */}
         <div className="mt-8 mb-10 flex flex-col md:flex-row gap-4 max-w-4xl">
           {editingId && (

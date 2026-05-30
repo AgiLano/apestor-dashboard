@@ -6,7 +6,8 @@ import { supabase } from "../../lib/supabase";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toPng } from "html-to-image";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 export default function HistoryPage() {
   const [signals, setSignals] = useState<any[]>([]);
 
@@ -17,6 +18,10 @@ export default function HistoryPage() {
   const [typeFilter, setTypeFilter] = useState("ALL");
 
   const [dateFilter, setDateFilter] = useState("ALL");
+
+  const [specificDateFilter, setSpecificDateFilter] = useState<Date | null>(
+    null,
+  );
 
   // =========================
   // FETCH
@@ -79,9 +84,10 @@ export default function HistoryPage() {
 
     let cocokDate = true;
 
-    if (signal.tanggal_signal) {
-      const signalDate = new Date(signal.tanggal_signal);
-
+    const signalDate = signal.tanggal_signal
+      ? new Date(signal.tanggal_signal)
+      : null;
+    if (signalDate) {
       if (dateFilter === "TODAY") {
         cocokDate =
           signalDate.getDate() === now.getDate() &&
@@ -103,7 +109,16 @@ export default function HistoryPage() {
       }
     }
 
-    return cocokSearch && cocokStatus && cocokType && cocokDate;
+    let cocokSpecificDate = true;
+
+    if (specificDateFilter && signalDate) {
+      cocokSpecificDate =
+        signalDate.toDateString() === specificDateFilter.toDateString();
+    }
+
+    return (
+      cocokSearch && cocokStatus && cocokType && cocokDate && cocokSpecificDate
+    );
   });
 
   // =========================
@@ -112,10 +127,12 @@ export default function HistoryPage() {
 
   const totalSignals = filteredSignals.length;
 
-  const totalDone = filteredSignals.filter((s) => s.status === "DONE").length;
+  const totalDone = filteredSignals.filter(
+    (s) => s.status?.toUpperCase() === "DONE",
+  ).length;
 
   const totalRunning = filteredSignals.filter(
-    (s) => s.status === "RUNNING",
+    (s) => s.status?.toUpperCase() === "RUNNING",
   ).length;
 
   const avgProfit =
@@ -357,65 +374,109 @@ rounded-2xl
             ))}
           </div>
 
-          {/* FILTER */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {/* FILTER PREMIUM */}
+
+          <div className="space-y-5 mb-10">
+            {/* SEARCH */}
             <input
               type="text"
               placeholder="Search Emiten..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
+              className="
+      w-full
+      bg-gradient-to-b
+      from-zinc-950
+      to-black
+      border
+      border-zinc-800
+      rounded-3xl
+      px-6
+      py-5
+      outline-none
+      text-zinc-100
+      focus:border-amber-300
+      transition-all
+      text-lg
+    "
             />
 
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
-            >
-              <option value="ALL" className="bg-black text-white">
-                ALL STATUS
-              </option>
+            {/* MAIN FILTER */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="
+        appearance-none
+        bg-zinc-950
+        border
+        border-zinc-800
+        rounded-2xl
+        px-5
+        py-4
+        text-white
+        outline-none
+        focus:border-amber-300
+      "
+              >
+                <option value="ALL">ALL STATUS</option>
+                <option value="RUNNING">RUNNING</option>
+                <option value="DONE">DONE</option>
+              </select>
 
-              <option value="RUNNING" className="bg-black text-white">
-                RUNNING
-              </option>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="
+        appearance-none
+        bg-zinc-950
+        border
+        border-zinc-800
+        rounded-2xl
+        px-5
+        py-4
+        text-white
+        outline-none
+        focus:border-amber-300
+      "
+              >
+                <option value="ALL">ALL TYPE</option>
+                <option value="HAKA PREOPEN">HAKA PREOPEN</option>
+                <option value="BSJC">BSJC</option>
+                <option value="LIVE TRADE">LIVE TRADE</option>
+                <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+                <option value="SWING">SWING</option>
+              </select>
+            </div>
 
-              <option value="DONE" className="bg-black text-white">
-                DONE
-              </option>
-            </select>
+            {/* PREMIUM DATE FILTER */}
+            <div className="pt-2">
+              <p className="text-zinc-500 text-sm mb-3 uppercase tracking-[0.2em]">
+                Filter Date
+              </p>
 
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none w-full bg-gradient-to-b from-black to-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 outline-none text-zinc-100 focus:border-amber-300  transition-all"
-            >
-              <option value="ALL" className="bg-black text-white">
-                ALL TYPE
-              </option>
-
-              <option value="HAKA PREOPEN" className="bg-black text-white">
-                HAKA PREOPEN
-              </option>
-
-              <option value="BSJC" className="bg-black text-white">
-                BSJC
-              </option>
-
-              <option value="LIVE TRADE" className="bg-black text-white">
-                LIVE TRADE
-              </option>
-
-              <option value="MENU TAMBAHAN" className="bg-black text-white">
-                MENU TAMBAHAN
-              </option>
-
-              <option value="SWING" className="bg-black text-white">
-                SWING
-              </option>
-            </select>
+              <DatePicker
+                selected={specificDateFilter}
+                onChange={(date: Date | null) => setSpecificDateFilter(date)}
+                dateFormat="dd MMMM yyyy"
+                placeholderText="Select Date"
+                calendarClassName="premium-calendar"
+                className="
+    bg-zinc-950
+    border
+    border-zinc-800
+    rounded-2xl
+    px-5
+    py-4
+    text-white
+    outline-none
+    focus:border-amber-300
+    w-full
+    md:w-[320px]
+  "
+              />
+            </div>
           </div>
-
           {/* STATS */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mb-10">
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 ">
@@ -461,11 +522,11 @@ rounded-2xl
 
           <div
             id="history-image"
-            className="bg-black p-8 rounded-3xl overflow-x-auto"
+            className="hidden md:block bg-black p-8 rounded-3xl overflow-x-auto"
           >
             {/* TABLE */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
-              <table className="w-full min-w-[1400px]">
+              <table className="w-full min-w-[1100px]">
                 <thead className="bg-gradient-to-r from-zinc-900 to-black border-b border-zinc-800">
                   <tr>
                     <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
@@ -508,7 +569,7 @@ rounded-2xl
                       key={signal.id}
                       className="border-t border-zinc-800 hover:bg-zinc-800/40 transition-all duration-200"
                     >
-                      <td className="p-4">
+                      <td className="px-4 py-5">
                         {formatDate(signal.tanggal_signal)}
                       </td>
 
@@ -516,15 +577,15 @@ rounded-2xl
                         {signal.emiten}
                       </td>
 
-                      <td className="p-4">{signal.trading_type}</td>
+                      <td className="px-4 py-5">{signal.trading_type}</td>
 
-                      <td className="p-4">{signal.avg || "-"}</td>
+                      <td className="px-4 py-5">{signal.avg || "-"}</td>
 
-                      <td className="p-4">
-                        <div className="space-y-3 text-sm">
+                      <td className="px-4 py-5">
+                        <div className="space-y-2 text-sm">
                           {/* ENTRY 1 */}
                           {Number(signal.entry_1) > 0 && (
-                            <div className="bg-zinc-800 rounded-2xl p-3">
+                            <div className="bg-zinc-800 rounded-xl p-2.5">
                               <p className="text-amber-300 font-bold">
                                 ENTRY 1
                               </p>
@@ -543,7 +604,7 @@ rounded-2xl
 
                           {/* ENTRY 2 */}
                           {Number(signal.entry_2) > 0 && (
-                            <div className="bg-zinc-800 rounded-2xl p-3">
+                            <div className="bg-zinc-800 rounded-xl p-2.5">
                               <p className="text-emerald-300 font-bold">
                                 ENTRY 2
                               </p>
@@ -562,7 +623,7 @@ rounded-2xl
 
                           {/* ENTRY 3 */}
                           {Number(signal.entry_3) > 0 && (
-                            <div className="bg-zinc-800 rounded-2xl p-3">
+                            <div className="bg-zinc-800 rounded-xl p-2.5">
                               <p className="text-rose-300 font-bold">ENTRY 3</p>
 
                               <p className="text-white font-semibold">
@@ -579,7 +640,7 @@ rounded-2xl
 
                           {/* DONE */}
                           {signal.done_date && (
-                            <div className="bg-zinc-800 border border-zinc-700 rounded-2xl p-3">
+                            <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-2.5">
                               <p className="text-emerald-400 font-bold">DONE</p>
 
                               <p className="text-zinc-300 text-xs mt-1">
@@ -592,7 +653,7 @@ rounded-2xl
                         </div>
                       </td>
 
-                      <td className="p-4">
+                      <td className="px-4 py-5">
                         {signal.trading_type === "SWING"
                           ? signal.tp_1 || "-"
                           : signal.tp || "-"}
@@ -602,10 +663,10 @@ rounded-2xl
                         {signal.profit_percentage || 0}%
                       </td>
 
-                      <td className="p-4">
+                      <td className="px-4 py-5">
                         <span
                           className={
-                            signal.status === "DONE"
+                            signal.status?.toUpperCase() === "DONE"
                               ? "text-emerald-400 font-bold"
                               : "text-rose-400 font-bold"
                           }
@@ -621,7 +682,7 @@ rounded-2xl
           </div>
 
           {/* MOBILE CARD */}
-          <div className="md:hidden space-y-3">
+          <div className="block md:hidden space-y-3">
             {filteredSignals.map((signal) => (
               <div
                 key={signal.id}
@@ -638,18 +699,15 @@ rounded-2xl
                       {signal.trading_type}
                     </p>
                   </div>
-
-                  <div>
-                    <span
-                      className={`px-4 py-2 rounded-2xl text-sm font-bold ${
-                        signal.status === "DONE"
-                          ? "bg-zinc-800 text-emerald-400 border border-zinc-700"
-                          : "bg-zinc-800 text-rose-400 border border-zinc-700"
-                      }`}
-                    >
-                      {signal.status}
-                    </span>
-                  </div>
+                  <span
+                    className={`px-4 py-2 rounded-2xl text-sm font-black border ${
+                      signal.status?.toUpperCase() === "DONE"
+                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                        : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                    }`}
+                  >
+                    {signal.status}
+                  </span>
                 </div>
 
                 {/* DATE */}
@@ -662,9 +720,9 @@ rounded-2xl
                 </div>
 
                 {/* ENTRY */}
-                <div className="space-y-3 mb-5">
+                <div className="space-y-4 mb-5">
                   {Number(signal.entry_1) > 0 && (
-                    <div className="bg-zinc-800 rounded-2xl p-3">
+                    <div className="bg-zinc-800 rounded-xl p-2.5">
                       <p className="text-amber-300 font-bold text-sm">
                         ENTRY 1
                       </p>
@@ -680,7 +738,7 @@ rounded-2xl
                   )}
 
                   {Number(signal.entry_2) > 0 && (
-                    <div className="bg-zinc-800 rounded-2xl p-3">
+                    <div className="bg-zinc-800 rounded-xl p-2.5">
                       <p className="text-emerald-300 font-bold text-sm">
                         ENTRY 2
                       </p>
@@ -696,7 +754,7 @@ rounded-2xl
                   )}
 
                   {Number(signal.entry_3) > 0 && (
-                    <div className="bg-zinc-800 rounded-2xl p-3">
+                    <div className="bg-zinc-800 rounded-xl p-2.5">
                       <p className="text-rose-300 font-bold text-sm">ENTRY 3</p>
 
                       <p className="text-xl font-bold">{signal.entry_3}</p>
@@ -708,17 +766,28 @@ rounded-2xl
                       </p>
                     </div>
                   )}
+
+                  {/* DONE */}
+                  {signal.done_date && (
+                    <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-2.5">
+                      <p className="text-emerald-400 font-bold text-sm">DONE</p>
+
+                      <p className="text-zinc-500 text-xs mt-1">
+                        {signal.done_date ? formatDate(signal.done_date) : "-"}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* BOTTOM */}
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-zinc-800 rounded-2xl p-3">
+                  <div className="bg-zinc-800 rounded-xl p-2.5">
                     <p className="text-zinc-500 text-xs">AVG</p>
 
                     <p className="font-bold text-lg">{signal.avg || "-"}</p>
                   </div>
 
-                  <div className="bg-zinc-800 rounded-2xl p-3">
+                  <div className="bg-zinc-800 rounded-xl p-2.5">
                     <p className="text-zinc-500 text-xs">TP</p>
 
                     <p className="font-bold text-lg">
@@ -728,7 +797,7 @@ rounded-2xl
                     </p>
                   </div>
 
-                  <div className="bg-zinc-800 rounded-2xl p-3">
+                  <div className="bg-zinc-800 rounded-xl p-2.5">
                     <p className="text-zinc-500 text-xs">PROFIT</p>
 
                     <p className="font-bold text-lg text-emerald-400">

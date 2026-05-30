@@ -8,14 +8,21 @@ import { toast } from "sonner";
 
 import Navbar from "@/components/Navbar";
 
+import TradingChart from "@/components/charts/TradingChart";
+
+import TradingViewWidget from "@/components/TradingViewWidget";
+
 import {
   LineChart,
   Line,
+  AreaChart,
+  Area,
   XAxis,
   PieChart,
   Pie,
   Cell,
   Legend,
+  Label,
   YAxis,
   Tooltip,
   ResponsiveContainer,
@@ -249,6 +256,20 @@ export default function Home() {
     }))
     .reverse();
 
+  const tradingChartData = filteredSignals
+    .filter((s) => s.profit_percentage !== null && s.done_date)
+    .sort(
+      (a, b) =>
+        new Date(a.done_date).getTime() - new Date(b.done_date).getTime(),
+    )
+    .map((signal, index) => ({
+      time: new Date(new Date(signal.done_date).getTime() + index * 1000)
+        .toISOString()
+        .split("T")[0],
+
+      value: Number(signal.profit_percentage || 0),
+    }));
+
   const pieData = [
     {
       name: "DONE",
@@ -312,7 +333,7 @@ export default function Home() {
     }, {}),
   )
     .sort((a: any, b: any) => b.totalProfit - a.totalProfit)
-    .slice(0, 5);
+    .slice(0, 3);
 
   // =========================
   // FORMAT DATE
@@ -342,12 +363,12 @@ export default function Home() {
         {data.map((signal) => (
           <div
             key={signal.id}
-            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 hover:border-amber-300/20 hover:shadow-[0_0_30px_rgba(252,211,77,0.08)] hover:-translate-y-1 transition-all duration-300"
+            className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 hover:border-white/10 hover:shadow-[0_0_30px_rgba(252,211,77,0.08)] hover:-translate-y-1 transition-all duration-300"
           >
             {/* HEADER */}
             <div className="flex justify-between items-start mb-5">
               <div>
-                <h2 className="text-4xl md:text-5xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
                   {signal.emiten}
                 </h2>
 
@@ -490,10 +511,10 @@ export default function Home() {
       <section className="mb-10">
         <button
           onClick={() => toggleSection(keyName)}
-          className="w-full flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] mb-5 hover:border-amber-300/20 hover:shadow-[0_0_25px_rgba(252,211,77,0.05)] transition-all duration-300"
+          className="w-full flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] mb-5 hover:border-white/10 hover:shadow-[0_0_25px_rgba(252,211,77,0.05)] transition-all duration-300"
         >
           <div>
-            <h2 className="text-2xl md:text-4xl font-bold text-zinc-100 text-left tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold text-zinc-100 text-left tracking-tight">
               {title}
             </h2>
 
@@ -502,7 +523,7 @@ export default function Home() {
             </p>
           </div>
 
-          <span className="text-2xl md:text-4xl font-semibold text-zinc-400">
+          <span className="text-xl md:text-2xl font-semibold text-zinc-400">
             {openSections[keyName] ? "−" : "+"}
           </span>
         </button>
@@ -519,7 +540,7 @@ export default function Home() {
       <main className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white pt-6 md:pt-10 p-4 md:p-10">
         {/* HEADER */}
         <div className="mb-5">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-none text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+          <h1 className="text-3xl md:text-5xl font-black leading-none text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
             APESTOR
             <br />
             Dashboard
@@ -531,7 +552,7 @@ export default function Home() {
         </div>
 
         {/* SEARCH + FILTER */}
-        <div className="flex flex-col md:flex-row gap-4 mb-10">
+        <div className="flex flex-col md:flex-row gap-6 mb-10">
           {/* SEARCH */}
           <input
             type="text"
@@ -591,14 +612,29 @@ export default function Home() {
           </select>
         </div>
 
+        {/* IHSG LIVE CHART */}
+        <div className="mb-12">
+          <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
+            <div className="mb-6">
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
+                IHSG Live Market
+              </h2>
+
+              <p className="text-zinc-400 mt-2">Realtime IDX Composite Chart</p>
+            </div>
+
+            <TradingViewWidget />
+          </div>
+        </div>
+
         {/* STATS */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12">
           <div className="bg-gradient-to-b from-zinc-900 to-black rounded-3xl p-4 md:p-5 border border-white/5 shadow-[0_0_30px_rgba(0,0,0,0.25)]">
             <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">
               Total Signals
             </p>
 
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-3">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)] mt-3">
               {totalSignals}
             </h2>
           </div>
@@ -608,7 +644,7 @@ export default function Home() {
               Running
             </p>
 
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-rose-400 mt-3">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-rose-400 mt-3">
               {totalRunning}
             </h2>
           </div>
@@ -618,7 +654,7 @@ export default function Home() {
               Done
             </p>
 
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-emerald-400 mt-3">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-emerald-400 mt-3">
               {totalDone}
             </h2>
           </div>
@@ -628,7 +664,7 @@ export default function Home() {
               Winrate
             </p>
 
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-blue-400 mt-3">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-blue-400 mt-3">
               {winrate}%
             </h2>
           </div>
@@ -638,22 +674,22 @@ export default function Home() {
               Avg Profit
             </p>
 
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-purple-400 mt-3">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-purple-400 mt-3">
               {avgProfit}%
             </h2>
           </div>
         </div>
 
         {/* WINRATE PER TYPE */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           {typeStats.map((item) => (
             <div
               key={item.type}
-              className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] hover:border-amber-300/20 hover:-translate-y-1 transition-all duration-300"
+              className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.25)] hover:border-white/10 hover:-translate-y-1 transition-all duration-300"
             >
               <p className="text-zinc-400 text-sm">{item.type}</p>
 
-              <h2 className="text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-3">
+              <h2 className="text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)] mt-3">
                 {item.winrate}%
               </h2>
 
@@ -662,101 +698,149 @@ export default function Home() {
           ))}
         </div>
 
-        {/* SIGNAL STATUS PIE CHART */}
-        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
-          <div className="mb-6">
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
-              Signal Status
-            </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start mb-12 min-w-0">
+          {/* SIGNAL STATUS PIE CHART */}
+          <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
+            <div className="mb-6">
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
+                Signal Status
+              </h2>
 
-            <p className="text-zinc-400 mt-2">Running vs Done Analytics</p>
+              <p className="text-zinc-400 mt-2">Running vs Done Analytics</p>
+            </div>
+
+            <div className="w-full min-w-0" style={{ height: 320 }}>
+              <ResponsiveContainer width="100%" height={320}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={70}
+                    outerRadius={95}
+                    paddingAngle={5}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <text
+                    x="50%"
+                    y="48%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="fill-white"
+                  >
+                    <tspan
+                      x="50%"
+                      dy="-0.2em"
+                      className="text-4xl font-black fill-amber-300"
+                    >
+                      {totalSignals}
+                    </tspan>
+
+                    <tspan x="50%" dy="1.8em" className="text-sm fill-zinc-400">
+                      Total Signal
+                    </tspan>
+                  </text>
+
+                  <Tooltip
+                    contentStyle={{
+                      background: "#09090b",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: "16px",
+                      color: "#fff",
+                    }}
+                  />
+
+                  <Legend
+                    iconType="circle"
+                    wrapperStyle={{
+                      color: "#fff",
+                      paddingTop: "20px",
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
-          <div className="w-full min-h-[320px] min-w-0 h-80">
-            <ResponsiveContainer width="100%" height={320}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={120}
-                  dataKey="value"
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
+          {/* PROFIT CHART */}
+          <div className="bg-gradient-to-br from-zinc-900 via-black to-zinc-950 border-white/5 rounded-3xl p-5 md:p-8 shadow-[0_0_60px_rgba(0,0,0,0.35)]">
+            <div className="mb-6">
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_10px_rgba(252,211,77,0.08)]">
+                Profit Performance
+              </h2>
 
-                <Tooltip />
+              <p className="text-zinc-400 mt-2">Market trend overview</p>
+            </div>
 
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* PROFIT CHART */}
-        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
-          <div className="mb-6">
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
-              Profit Performance
-            </h2>
-
-            <p className="text-zinc-400 mt-2">Realtime profit analytics</p>
-          </div>
-
-          <div className="w-full min-h-[320px] min-w-0 h-72 md:h-96">
-            <ResponsiveContainer width="100%" height={320}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#18181b" />
-
-                <XAxis dataKey="name" stroke="#a1a1aa" />
-
-                <YAxis stroke="#a1a1aa" />
-
-                <Tooltip />
-
-                <Line
-                  type="monotone"
-                  dataKey="profit"
-                  stroke="#fcd34d"
-                  strokeWidth={4}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="w-full h-[300px] min-w-0 overflow-hidden">
+              <TradingChart data={tradingChartData} />
+            </div>
           </div>
         </div>
 
         {/* MONTHLY PERFORMANCE */}
-        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
               Monthly Performance
             </h2>
 
             <p className="text-zinc-400 mt-2">Monthly profit analytics</p>
           </div>
 
-          <div className="w-full min-h-[320px] min-w-0 h-80">
-            <ResponsiveContainer width="100%" height={320}>
+          <div className="w-full min-w-0" style={{ height: 260 }}>
+            <ResponsiveContainer width="100%" height={260}>
               <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#18181b" />
+                <CartesianGrid
+                  strokeDasharray="1 10"
+                  stroke="rgba(255,255,255,0.03)"
+                  vertical={false}
+                />
 
                 <XAxis dataKey="month" stroke="#a1a1aa" />
 
                 <YAxis stroke="#a1a1aa" />
 
-                <Tooltip />
+                <Tooltip
+                  cursor={{
+                    stroke: "#2dd4bf",
+                    strokeWidth: 1,
+                    strokeDasharray: "5 5",
+                  }}
+                  contentStyle={{
+                    background: "rgba(9,9,11,0.95)",
+                    border: "1px solid rgba(45,212,191,0.15)",
+                    borderRadius: "20px",
+                    color: "#fff",
+                    backdropFilter: "blur(10px)",
+                    boxShadow: "0 0 12px rgba(45,212,191,0.05)",
+                  }}
+                />
 
                 <Line
                   type="monotone"
                   dataKey="profit"
-                  stroke="#34d399"
-                  strokeWidth={4}
+                  stroke="#2dd4bf"
+                  strokeWidth={2.5}
+                  dot={{
+                    r: 5,
+                    fill: "#2dd4bf",
+                    strokeWidth: 0,
+                  }}
+                  activeDot={{
+                    r: 7,
+                    fill: "#2dd4bf",
+                    stroke: "#fff",
+                    strokeWidth: 2,
+                  }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -764,22 +848,22 @@ export default function Home() {
         </div>
 
         {/* TOP EMITEN */}
-        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 mb-14 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-5 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.25)]">
           <div className="mb-6">
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
               Top Profit Emiten
             </h2>
 
             <p className="text-zinc-400 mt-2">Best performing stocks</p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {bestEmitens.map((item: any, index) => (
               <div
                 key={item.emiten}
-                className="flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl p-4 md:p-5 hover:border-amber-300/20 hover:shadow-[0_0_25px_rgba(252,211,77,0.06)] transition-all"
+                className="flex items-center justify-between bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-2xl p-4 hover:border-white/10 hover:shadow-[0_0_25px_rgba(252,211,77,0.06)] transition-all"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-300 text-black font-black flex items-center justify-center text-lg md:text-xl shadow-[0_0_20px_rgba(252,211,77,0.15)]">
                     {index + 1}
                   </div>
@@ -796,7 +880,7 @@ export default function Home() {
                 </div>
 
                 <div className="text-right">
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tight text-emerald-400">
+                  <h2 className="text-xl md:text-2xl font-black tracking-tight text-emerald-400">
                     +{item.totalProfit.toFixed(2)}%
                   </h2>
                 </div>
@@ -809,7 +893,7 @@ export default function Home() {
         <section className="mt-8 md:mt-12 mb-10">
           <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-4 md:p-6 max-w-5xl mx-auto shadow-[0_0_40px_rgba(0,0,0,0.25)]">
             <div className="mb-6">
-              <h2 className="text-2xl md:text-4xl font-black text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)]">
+              <h2 className="text-xl md:text-2xl font-black text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)]">
                 AVG DOWN
               </h2>
 
@@ -819,7 +903,7 @@ export default function Home() {
             </div>
 
             {/* INPUT */}
-            <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-2 md:gap-6 mb-4">
               <input
                 type="number"
                 placeholder="Avg Awal"
@@ -865,7 +949,7 @@ export default function Home() {
             <div className="bg-gradient-to-b from-black via-zinc-950 to-black border border-white/5 rounded-2xl p-4 shadow-[0_0_25px_rgba(0,0,0,0.25)]">
               <p className="text-zinc-400 text-sm">AVG BARU</p>
 
-              <h2 className="text-2xl md:text-4xl font-black text-amber-300 drop-shadow-[0_0_25px_rgba(252,211,77,0.15)] mt-1">
+              <h2 className="text-xl md:text-2xl font-black text-amber-300 drop-shadow-[0_0_6px_rgba(252,211,77,0.04)] mt-1">
                 {hasilAvg || 0}
               </h2>
 
