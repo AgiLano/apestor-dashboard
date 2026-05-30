@@ -59,15 +59,43 @@ export async function GET() {
               embed: {
                 title: "🎯 TARGET ACHIEVED",
                 color: 0x22c55e,
-                description: `📈 ${signal.emiten}
 
-📌 AVG : ${signal.avg}
+                fields: [
+                  {
+                    name: "📈 Emiten",
+                    value: signal.emiten,
+                    inline: true,
+                  },
+                  {
+                    name: "📌 AVG",
+                    value: String(signal.avg),
+                    inline: true,
+                  },
+                  {
+                    name: "🚀 Profit",
+                    value: `+${profitPercent}%`,
+                    inline: true,
+                  },
+                  {
+                    name: "🎯 Target",
+                    value: String(targetPrice),
+                    inline: true,
+                  },
+                  {
+                    name: "💰 Current",
+                    value: String(currentPrice),
+                    inline: true,
+                  },
+                  {
+                    name: "📍 Status",
+                    value: "DONE",
+                    inline: true,
+                  },
+                ],
 
-🎯 Target : ${targetPrice}
+                footer: "RITEL SOCIETY • Premium Trading Community",
 
-💰 Current : ${currentPrice}
-
-🚀 Profit : +${profitPercent}%`,
+                timestamp: new Date().toISOString(),
               },
             }),
           });
