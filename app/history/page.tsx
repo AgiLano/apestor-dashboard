@@ -177,7 +177,13 @@ export default function HistoryPage() {
 
     doc.setFillColor(0, 0, 0);
 
-    doc.rect(0, 0, 300, 300, "F");
+    doc.rect(
+      0,
+      0,
+      doc.internal.pageSize.getWidth(),
+      doc.internal.pageSize.getHeight(),
+      "F",
+    );
 
     doc.setTextColor(255, 215, 0);
 
@@ -201,18 +207,6 @@ export default function HistoryPage() {
 
     autoTable(doc, {
       startY: 80,
-
-      didDrawPage: () => {
-        doc.setFillColor(0, 0, 0);
-
-        doc.rect(
-          0,
-          0,
-          doc.internal.pageSize.width,
-          doc.internal.pageSize.height,
-          "F",
-        );
-      },
 
       head: [
         ["Date", "Emiten", "Type", "AVG", "Timeline", "TP", "Profit", "Status"],
