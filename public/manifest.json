@@ -1,6 +1,6 @@
 {
-  "name": "APESTOR Dashboard",
-  "short_name": "APESTOR",
+  "name": "RISE Dashboard",
+  "short_name": "RISE",
   "description": "Realtime Trading Community Dashboard",
   "start_url": "/",
   "display": "standalone",
