@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const { message } = await req.json();
+
     const webhook = process.env.DISCORD_WEBHOOK_URL;
 
-    const response = await fetch(webhook!, {
+    if (!webhook) {
+      return NextResponse.json(
+        { error: "Webhook URL missing" },
+        { status: 500 },
+      );
+    }
+
+    const response = await fetch(webhook, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        content: "🚀 TEST NOTIFIKASI RISE BERHASIL",
+        content: message,
       }),
     });
 
