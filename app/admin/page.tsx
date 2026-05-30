@@ -311,68 +311,62 @@ export default function AdminPage() {
       editingId ? "Signal berhasil diupdate!" : "Signal berhasil disimpan!",
     );
 
-    body: (JSON.stringify({
-      embed: {
-        title: editingId ? "✏️ SIGNAL UPDATE RISE" : "🚀 SIGNAL BARU RISE",
+    await fetch("/api/discord", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        embed: {
+          title: editingId ? "✏️ SIGNAL UPDATE RISE" : "🚀 SIGNAL BARU RISE",
 
-        color: editingId ? 0xf59e0b : 0xeab308,
+          color: editingId ? 0xf59e0b : 0xeab308,
 
-        fields: [
-          {
-            name: "📈 Emiten",
-            value: emiten,
-            inline: true,
-          },
-          {
-            name: "📊 Strategy",
-            value: tradingType,
-            inline: true,
-          },
-          {
-            name: "📍 Status",
-            value: status,
-            inline: true,
-          },
-
-          {
-            name: "💰 Entry Area",
-            value: `Entry 1 : ${entry1 || "-"}
+          fields: [
+            {
+              name: "📈 Emiten",
+              value: emiten,
+              inline: true,
+            },
+            {
+              name: "📊 Strategy",
+              value: tradingType,
+              inline: true,
+            },
+            {
+              name: "📍 Status",
+              value: status,
+              inline: true,
+            },
+            {
+              name: "💰 Entry Area",
+              value: `Entry 1 : ${entry1 || "-"}
 Entry 2 : ${entry2 || "-"}
 Entry 3 : ${entry3 || "-"}`,
-            inline: false,
-          },
-
-          {
-            name: "📌 AVG",
-            value: avg || "-",
-            inline: true,
-          },
-
-          {
-            name: "🎯 Target",
-            value:
-              tradingType === "SWING"
-                ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
-                : tp || "-",
-            inline: true,
-          },
-
-          {
-            name: "🕒 Waktu",
-            value: `${currentTime} WIB`,
-            inline: true,
-          },
-        ],
-
-        footer: {
-          text: "RITEL SOCIETY • Premium Trading Community",
+              inline: false,
+            },
+            {
+              name: "📌 AVG",
+              value: avg || "-",
+              inline: true,
+            },
+            {
+              name: "🎯 Target",
+              value:
+                tradingType === "SWING"
+                  ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
+                  : tp || "-",
+              inline: true,
+            },
+            {
+              name: "🕒 Waktu",
+              value: `${currentTime} WIB`,
+              inline: true,
+            },
+          ],
         },
-
-        timestamp: new Date().toISOString(),
-      },
-    }),
-      // RESET
-      setEditingId(null));
+      }),
+    });
 
     setEmiten("");
     setTradingType("");
