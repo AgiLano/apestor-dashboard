@@ -331,9 +331,10 @@ export default function AdminPage() {
             }
 
 📍 Status : ${status}`
-          : `    ━━━━━━━━━━━━━━━━━━
-                🚀 SIGNAL BARU RISE
-                 ━━━━━━━━━━━━━━━━━━
+          : `
+          ━━━━━━━━━━━━━━━━━━
+         🚀 SIGNAL BARU RISE
+          ━━━━━━━━━━━━━━━━━━
 
 📈 Emiten     : ${emiten}
 📊 Strategy   : ${tradingType}
