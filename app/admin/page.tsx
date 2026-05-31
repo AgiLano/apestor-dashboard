@@ -63,8 +63,6 @@ export default function AdminPage() {
 
   const [avg, setAvg] = useState("");
 
-  const [tp, setTp] = useState("");
-
   const [tp1, setTp1] = useState("");
 
   const [tp2, setTp2] = useState("");
@@ -234,11 +232,6 @@ export default function AdminPage() {
 
     setLoading(true);
 
-    const targetPercent =
-      avg && tp
-        ? (((Number(tp) - Number(avg)) / Number(avg)) * 100).toFixed(2)
-        : "0";
-
     const payload = {
       tanggal_signal: formatLocalDate(signalDate),
       emiten: emiten.toUpperCase(),
@@ -255,13 +248,13 @@ export default function AdminPage() {
 
       avg: Number(avg),
 
-      tp: tradingType === "SWING" ? null : Number(tp),
+      tp: null,
 
-      tp_1: tradingType === "SWING" ? Number(tp1) : null,
+      tp_1: tp1 ? Number(tp1) : null,
 
-      tp_2: tradingType === "SWING" ? Number(tp2) : null,
+      tp_2: tp2 ? Number(tp2) : null,
 
-      tp_3: tradingType === "SWING" ? Number(tp3) : null,
+      tp_3: tp3 ? Number(tp3) : null,
 
       status,
 
@@ -352,10 +345,7 @@ Entry 3 : ${entry3 || "-"}`,
             },
             {
               name: "🎯 Target",
-              value:
-                tradingType === "SWING"
-                  ? `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`
-                  : tp || "-",
+              value: `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`,
               inline: true,
             },
             {
@@ -377,7 +367,6 @@ Entry 3 : ${entry3 || "-"}`,
 
     setAvg("");
 
-    setTp("");
     setTp1("");
     setTp2("");
     setTp3("");
@@ -522,12 +511,8 @@ Entry 3 : ${entry3 || "-"}`,
                 BSJC
               </option>
 
-              <option value="LIVE TRADE" className="bg-black text-white">
-                LIVE TRADE
-              </option>
-
-              <option value="MENU TAMBAHAN" className="bg-black text-white">
-                MENU TAMBAHAN
+              <option value="SNIPERAN" className="bg-black text-white">
+                SNIPERAN
               </option>
 
               <option value="SWING" className="bg-black text-white">
@@ -617,44 +602,31 @@ Entry 3 : ${entry3 || "-"}`,
             </div>
 
             {/* TP */}
-            {tradingType !== "SWING" && (
+            <div className="grid md:grid-cols-3 gap-4">
               <input
                 type="number"
-                placeholder="TP"
-                value={tp}
-                onChange={(e) => setTp(e.target.value)}
-                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
+                placeholder="TP 1"
+                value={tp1}
+                onChange={(e) => setTp1(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4"
               />
-            )}
 
-            {/* SWING */}
-            {tradingType === "SWING" && (
-              <div className="grid md:grid-cols-3 gap-4">
-                <input
-                  type="number"
-                  placeholder="TP 1"
-                  value={tp1}
-                  onChange={(e) => setTp1(e.target.value)}
-                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-                />
+              <input
+                type="number"
+                placeholder="TP 2"
+                value={tp2}
+                onChange={(e) => setTp2(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4"
+              />
 
-                <input
-                  type="number"
-                  placeholder="TP 2"
-                  value={tp2}
-                  onChange={(e) => setTp2(e.target.value)}
-                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-                />
-
-                <input
-                  type="number"
-                  placeholder="TP 3"
-                  value={tp3}
-                  onChange={(e) => setTp3(e.target.value)}
-                  className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4 outline-none text-zinc-100 focus:border-amber-300/30 focus:shadow-[0_0_20px_rgba(252,211,77,0.08)] transition-all"
-                />
-              </div>
-            )}
+              <input
+                type="number"
+                placeholder="TP 3"
+                value={tp3}
+                onChange={(e) => setTp3(e.target.value)}
+                className="w-full bg-gradient-to-b from-black to-zinc-950 border border-white/5 rounded-2xl p-4"
+              />
+            </div>
 
             {/* STATUS */}
             <select
@@ -827,7 +799,6 @@ Entry 3 : ${entry3 || "-"}`,
 
                 setAvg("");
 
-                setTp("");
                 setTp1("");
                 setTp2("");
                 setTp3("");
@@ -928,12 +899,8 @@ shadow-amber-300/10
               BSJC
             </option>
 
-            <option value="LIVE TRADE" className="bg-black text-white">
-              LIVE TRADE
-            </option>
-
-            <option value="MENU TAMBAHAN" className="bg-black text-white">
-              MENU TAMBAHAN
+            <option value="SNIPERAN" className="bg-black text-white">
+              SNIPERAN
             </option>
 
             <option value="SWING" className="bg-black text-white">
@@ -1036,8 +1003,6 @@ shadow-amber-300/10
                       );
 
                       setAvg(signal.avg?.toString() || "");
-
-                      setTp(signal.tp?.toString() || "");
 
                       setTp1(signal.tp_1?.toString() || "");
 
@@ -1198,8 +1163,6 @@ font-bold
                             );
 
                             setAvg(signal.avg?.toString() || "");
-
-                            setTp(signal.tp?.toString() || "");
 
                             setTp1(signal.tp_1?.toString() || "");
 

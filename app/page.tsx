@@ -55,11 +55,9 @@ export default function Home() {
   const [openSections, setOpenSections] = useState({
     haka: true,
     bsjc: true,
-    live: true,
-    tambahan: true,
+    sniperan: true,
     swing: true,
   });
-
   function toggleSection(section: keyof typeof openSections) {
     setOpenSections((prev) => ({
       ...prev,
@@ -187,12 +185,8 @@ export default function Home() {
 
   const bsjcSignals = filteredSignals.filter((s) => s.trading_type === "BSJC");
 
-  const liveSignals = filteredSignals.filter(
-    (s) => s.trading_type === "LIVE TRADE",
-  );
-
-  const tambahanSignals = filteredSignals.filter(
-    (s) => s.trading_type === "MENU TAMBAHAN",
+  const sniperanSignals = filteredSignals.filter(
+    (s) => s.trading_type === "SNIPERAN",
   );
 
   const swingSignals = filteredSignals.filter(
@@ -224,7 +218,7 @@ export default function Home() {
         ).toFixed(2)
       : "0";
 
-  const typeStats = ["BSJC", "HAKA PREOPEN", "LIVE TRADE", "SWING"].map(
+  const typeStats = ["BSJC", "HAKA PREOPEN", "SNIPERAN", "SWING"].map(
     (type) => {
       const signalsByType = signals.filter((s) => s.trading_type === type);
 
@@ -435,37 +429,28 @@ export default function Home() {
                 </span>
               </p>
 
-              {signal.trading_type === "SWING" ? (
-                <>
-                  <p className="text-zinc-400">
-                    TP1:{" "}
-                    <span className="font-black text-zinc-100">
-                      {signal.tp_1 || "-"}
-                    </span>
-                  </p>
-
-                  <p className="text-zinc-400">
-                    TP2:{" "}
-                    <span className="font-black text-zinc-100">
-                      {signal.tp_2 || "-"}
-                    </span>
-                  </p>
-
-                  <p className="text-zinc-400">
-                    TP3:{" "}
-                    <span className="font-black text-zinc-100">
-                      {signal.tp_3 || "-"}
-                    </span>
-                  </p>
-                </>
-              ) : (
+              <>
                 <p className="text-zinc-400">
-                  TP:{" "}
+                  TP1:{" "}
                   <span className="font-black text-zinc-100">
-                    {signal.tp || "-"}
+                    {signal.tp_1 || "-"}
                   </span>
                 </p>
-              )}
+
+                <p className="text-zinc-400">
+                  TP2:{" "}
+                  <span className="font-black text-zinc-100">
+                    {signal.tp_2 || "-"}
+                  </span>
+                </p>
+
+                <p className="text-zinc-400">
+                  TP3:{" "}
+                  <span className="font-black text-zinc-100">
+                    {signal.tp_3 || "-"}
+                  </span>
+                </p>
+              </>
 
               <p className="text-zinc-400">
                 High Price:{" "}
@@ -598,12 +583,8 @@ export default function Home() {
               HAKA PREOPEN
             </option>
 
-            <option value="LIVE TRADE" className="bg-black text-white">
-              LIVE TRADE
-            </option>
-
-            <option value="MENU TAMBAHAN" className="bg-black text-white">
-              MENU TAMBAHAN
+            <option value="SNIPERAN" className="bg-black text-white">
+              SNIPERAN
             </option>
 
             <option value="SWING" className="bg-black text-white">
@@ -979,9 +960,7 @@ export default function Home() {
 
         {renderSection("BSJC", "bsjc", bsjcSignals)}
 
-        {renderSection("LIVE TRADE", "live", liveSignals)}
-
-        {renderSection("MENU TAMBAHAN", "tambahan", tambahanSignals)}
+        {renderSection("SNIPERAN", "sniperan", sniperanSignals)}
 
         {renderSection("SWING", "swing", swingSignals)}
       </main>

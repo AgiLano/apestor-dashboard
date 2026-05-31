@@ -21,13 +21,7 @@ export async function GET() {
 
         const currentPrice = result?.regularMarketPrice || 0;
 
-        let targetPrice = 0;
-
-        if (signal.trading_type === "SWING") {
-          targetPrice = Number(signal.tp_1 || 0);
-        } else {
-          targetPrice = Number(signal.tp || 0);
-        }
+        const targetPrice = Number(signal.tp_1 || 0);
 
         if (targetPrice <= 0) continue;
 

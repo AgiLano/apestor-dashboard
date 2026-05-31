@@ -234,7 +234,7 @@ export default function HistoryPage() {
         ]
           .filter(Boolean)
           .join("\n"),
-        signal.trading_type === "SWING" ? signal.tp_1 || "-" : signal.tp || "-",
+        `${signal.tp_1 || "-"} | ${signal.tp_2 || "-"} | ${signal.tp_3 || "-"}`,
         `${signal.profit_percentage || 0}%`,
         signal.status,
       ]),
@@ -437,8 +437,7 @@ rounded-2xl
                 <option value="ALL">ALL TYPE</option>
                 <option value="HAKA PREOPEN">HAKA PREOPEN</option>
                 <option value="BSJC">BSJC</option>
-                <option value="LIVE TRADE">LIVE TRADE</option>
-                <option value="MENU TAMBAHAN">MENU TAMBAHAN</option>
+                <option value="SNIPERAN">SNIPERAN</option>
                 <option value="SWING">SWING</option>
               </select>
             </div>
@@ -544,7 +543,7 @@ rounded-2xl
                     </th>
 
                     <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
-                      TP
+                      TP1 / TP2 / TP3
                     </th>
 
                     <th className="p-4 text-left text-zinc-400 font-semibold tracking-wide">
@@ -648,9 +647,8 @@ rounded-2xl
                       </td>
 
                       <td className="px-4 py-5">
-                        {signal.trading_type === "SWING"
-                          ? signal.tp_1 || "-"
-                          : signal.tp || "-"}
+                        {signal.tp_1 || "-"} | {signal.tp_2 || "-"} |{" "}
+                        {signal.tp_3 || "-"}
                       </td>
 
                       <td className="p-4 text-emerald-400 font-bold">
@@ -785,9 +783,8 @@ rounded-2xl
                     <p className="text-zinc-500 text-xs">TP</p>
 
                     <p className="font-bold text-lg">
-                      {signal.trading_type === "SWING"
-                        ? signal.tp_1 || "-"
-                        : signal.tp || "-"}
+                      {signal.tp_1 || "-"} | {signal.tp_2 || "-"} |{" "}
+                      {signal.tp_3 || "-"}
                     </p>
                   </div>
 
