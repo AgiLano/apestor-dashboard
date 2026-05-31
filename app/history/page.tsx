@@ -175,6 +175,10 @@ export default function HistoryPage() {
   function exportPDF() {
     const doc = new jsPDF();
 
+    const logo = new Image();
+
+    logo.src = "/logo-rise.png";
+
     doc.setFillColor(0, 0, 0);
 
     doc.rect(
@@ -184,6 +188,8 @@ export default function HistoryPage() {
       doc.internal.pageSize.getHeight(),
       "F",
     );
+
+    doc.addImage(logo, "PNG", 14, 8, 12, 12);
 
     doc.setTextColor(255, 215, 0);
 
