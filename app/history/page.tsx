@@ -206,24 +206,29 @@ export default function HistoryPage() {
     doc.text(`Winrate : ${winrate}%`, 14, 67);
 
     autoTable(doc, {
-      willDrawPage: () => {
-        doc.setFillColor(0, 0, 0);
+      willDrawPage: (data) => {
+        if (data.pageNumber > 1) {
+          doc.setFillColor(0, 0, 0);
 
-        doc.rect(
-          0,
-          0,
-          doc.internal.pageSize.getWidth(),
-          doc.internal.pageSize.getHeight(),
-          "F",
-        );
+          doc.rect(
+            0,
+            0,
+            doc.internal.pageSize.getWidth(),
+            doc.internal.pageSize.getHeight(),
+            "F",
+          );
 
-        doc.setTextColor(255, 215, 0);
+          doc.setTextColor(255, 215, 0);
 
-        doc.setFontSize(20);
+          doc.setFontSize(16);
 
-        doc.text("RISE HISTORY RECAP", 14, 15);
+          doc.text("RISE HISTORY RECAP", 14, 15);
+        }
       },
-      startY: 25,
+      startY: 75,
+      margin: {
+        top: 25,
+      },
 
       head: [
         [
