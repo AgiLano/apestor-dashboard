@@ -276,6 +276,9 @@ export default function HistoryPage() {
         cacheBust: true,
         backgroundColor: "#000000",
         pixelRatio: 3,
+
+        canvasWidth: element.scrollWidth,
+        canvasHeight: element.scrollHeight,
       });
 
       const link = document.createElement("a");
@@ -515,7 +518,7 @@ rounded-2xl
 
           <div
             id="history-image"
-            className="hidden md:block bg-black p-8 rounded-3xl overflow-x-auto"
+            className="hidden md:block bg-black p-8 rounded-3xl overflow-visible"
           >
             {/* TABLE */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
