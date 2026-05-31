@@ -310,6 +310,8 @@ export default function AdminPage() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        channel: editingId ? "ARAHAN" : "REKOM",
+
         embed: {
           title: editingId ? "✏️ SIGNAL UPDATE RISE" : "🚀 SIGNAL BARU RISE",
 

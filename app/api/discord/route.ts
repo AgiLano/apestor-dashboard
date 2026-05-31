@@ -4,7 +4,15 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const webhook = process.env.DISCORD_WEBHOOK_URL;
+    let webhook = process.env.DISCORD_WEBHOOK_REKOM;
+
+    if (body.channel === "ARAHAN") {
+      webhook = process.env.DISCORD_WEBHOOK_ARAHAN;
+    }
+
+    if (body.channel === "DONE") {
+      webhook = process.env.DISCORD_WEBHOOK_DONE;
+    }
 
     if (!webhook) {
       return NextResponse.json(
