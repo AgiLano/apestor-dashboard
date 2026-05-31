@@ -262,7 +262,7 @@ export default function HistoryPage() {
   // =========================
 
   async function downloadImage() {
-    const element = document.getElementById("history-image");
+    const element = document.getElementById("history-share");
 
     if (!element) return;
 
@@ -673,6 +673,80 @@ rounded-2xl
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <div
+            id="history-share"
+            className="hidden bg-black text-white p-8 w-[1200px]"
+          >
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-5xl font-black text-amber-300 mb-6">
+                🚀 RISE HISTORY RECAP
+              </h1>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-zinc-900 p-4 rounded-2xl">
+                  <p>Total Signal</p>
+                  <h2 className="text-3xl font-black">{totalSignals}</h2>
+                </div>
+
+                <div className="bg-zinc-900 p-4 rounded-2xl">
+                  <p>Done</p>
+                  <h2 className="text-3xl font-black text-emerald-400">
+                    {totalDone}
+                  </h2>
+                </div>
+
+                <div className="bg-zinc-900 p-4 rounded-2xl">
+                  <p>Running</p>
+                  <h2 className="text-3xl font-black text-rose-400">
+                    {totalRunning}
+                  </h2>
+                </div>
+
+                <div className="bg-zinc-900 p-4 rounded-2xl">
+                  <p>Winrate</p>
+                  <h2 className="text-3xl font-black text-amber-300">
+                    {winrate}%
+                  </h2>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {filteredSignals.map((signal) => (
+                  <div
+                    key={signal.id}
+                    className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-2xl font-black text-amber-300">
+                          {signal.emiten}
+                        </h3>
+
+                        <p className="text-zinc-400">{signal.trading_type}</p>
+                      </div>
+
+                      <div className="text-right">
+                        <p
+                          className={
+                            signal.status === "DONE"
+                              ? "text-emerald-400 font-bold"
+                              : "text-rose-400 font-bold"
+                          }
+                        >
+                          {signal.status}
+                        </p>
+
+                        <p className="text-xl font-black">
+                          {signal.profit_percentage || 0}%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
