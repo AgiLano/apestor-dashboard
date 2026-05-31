@@ -175,6 +175,16 @@ export default function HistoryPage() {
   function exportPDF() {
     const doc = new jsPDF();
 
+    doc.setFillColor(0, 0, 0);
+
+    doc.rect(
+      0,
+      0,
+      doc.internal.pageSize.getWidth(),
+      doc.internal.pageSize.getHeight(),
+      "F",
+    );
+
     const logo = new Image();
 
     logo.src = "/logo-rise-transparent.png";
@@ -187,7 +197,7 @@ export default function HistoryPage() {
 
     doc.text("RISE HISTORY RECAP", 38, 18);
 
-    doc.setTextColor(255, 255, 255);
+    doc.setTextColor(220, 220, 220);
 
     doc.setFontSize(12);
 
@@ -201,20 +211,10 @@ export default function HistoryPage() {
 
     doc.text(`Winrate : ${winrate}%`, 14, 67);
 
-    doc.setFillColor(0, 0, 0);
-
-    doc.rect(
-      0,
-      0,
-      doc.internal.pageSize.getWidth(),
-      doc.internal.pageSize.getHeight(),
-      "F",
-    );
-
     autoTable(doc, {
       willDrawPage: (data) => {
         try {
-          doc.addImage(logo, "PNG", 65, 105, 50, 50);
+          doc.addImage(logo, "PNG", 78, 120, 35, 35);
         } catch (e) {}
 
         if (data.pageNumber > 1) {
