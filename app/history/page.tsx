@@ -709,8 +709,22 @@ rounded-2xl
 
           <div
             id="history-share"
-            className="hidden bg-black text-white p-8 w-[1200px]"
+            className="hidden bg-black text-white p-8 w-[1200px] relative overflow-hidden"
           >
+            <img
+              src="/logo-rise.png"
+              alt="RISE"
+              className="
+    absolute
+    top-1/2
+    left-1/2
+    -translate-x-1/2
+    -translate-y-1/2
+    w-[700px]
+    opacity-[0.06]
+    pointer-events-none
+  "
+            />
             <div className="max-w-4xl mx-auto">
               <h1 className="text-5xl font-black text-amber-300 mb-6">
                 🚀 RISE HISTORY RECAP
