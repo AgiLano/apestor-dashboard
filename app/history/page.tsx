@@ -177,7 +177,7 @@ export default function HistoryPage() {
 
     const logo = new Image();
 
-    logo.src = "/logo-rise.png";
+    logo.src = "/logo-rise-transparent.png";
 
     doc.setFillColor(0, 0, 0);
 
@@ -189,13 +189,13 @@ export default function HistoryPage() {
       "F",
     );
 
-    doc.addImage(logo, "PNG", 14, 8, 12, 12);
+    doc.addImage(logo, "PNG", 14, 6, 18, 18);
 
     doc.setTextColor(255, 215, 0);
 
     doc.setFontSize(26);
 
-    doc.text("RISE HISTORY RECAP", 14, 20);
+    doc.text("RISE HISTORY RECAP", 38, 18);
 
     doc.setTextColor(255, 255, 255);
 
@@ -213,22 +213,17 @@ export default function HistoryPage() {
 
     autoTable(doc, {
       willDrawPage: (data) => {
+        try {
+          doc.addImage(logo, "PNG", 70, 90, 55, 55);
+        } catch (e) {}
         if (data.pageNumber > 1) {
-          doc.setFillColor(0, 0, 0);
-
-          doc.rect(
-            0,
-            0,
-            doc.internal.pageSize.getWidth(),
-            doc.internal.pageSize.getHeight(),
-            "F",
-          );
+          doc.addImage(logo, "PNG", 14, 5, 12, 12);
 
           doc.setTextColor(255, 215, 0);
 
           doc.setFontSize(16);
 
-          doc.text("RISE HISTORY RECAP", 14, 15);
+          doc.text("RISE HISTORY RECAP", 30, 13);
         }
       },
       startY: 75,
@@ -290,6 +285,20 @@ export default function HistoryPage() {
         fillColor: [25, 25, 25],
       },
     });
+
+    const pageCount = doc.getNumberOfPages();
+
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+
+      doc.setTextColor(120, 120, 120);
+
+      doc.setFontSize(9);
+
+      doc.text("RITEL SOCIETY • Premium Trading Community", 14, 290);
+
+      doc.text(`Page ${i} of ${pageCount}`, 180, 290);
+    }
 
     doc.save("rise-history.pdf");
   }
@@ -718,7 +727,7 @@ rounded-2xl
             className="hidden bg-black text-white p-8 w-[1200px] relative overflow-hidden"
           >
             <img
-              src="/logo-rise.png"
+              src="/logo-rise-transparent.png"
               alt="RISE"
               className="
     absolute
@@ -734,7 +743,7 @@ rounded-2xl
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-5 mb-8">
                 <img
-                  src="/logo-rise.png"
+                  src="/logo-rise-transparent.png"
                   alt="RISE"
                   className="w-20 h-20 object-contain"
                 />
