@@ -50,6 +50,8 @@ export async function GET() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              channel: "DONE",
+
               embed: {
                 title: "🎯 TARGET ACHIEVED",
                 color: 0x22c55e,
