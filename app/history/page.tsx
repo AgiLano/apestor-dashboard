@@ -179,16 +179,6 @@ export default function HistoryPage() {
 
     logo.src = "/logo-rise-transparent.png";
 
-    doc.setFillColor(0, 0, 0);
-
-    doc.rect(
-      0,
-      0,
-      doc.internal.pageSize.getWidth(),
-      doc.internal.pageSize.getHeight(),
-      "F",
-    );
-
     doc.addImage(logo, "PNG", 14, 6, 18, 18);
 
     doc.setTextColor(255, 215, 0);
@@ -213,9 +203,20 @@ export default function HistoryPage() {
 
     autoTable(doc, {
       willDrawPage: (data) => {
+        doc.setFillColor(0, 0, 0);
+
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.getWidth(),
+          doc.internal.pageSize.getHeight(),
+          "F",
+        );
+
         try {
-          doc.addImage(logo, "PNG", 70, 90, 55, 55);
+          doc.addImage(logo, "PNG", 65, 105, 50, 50);
         } catch (e) {}
+
         if (data.pageNumber > 1) {
           doc.addImage(logo, "PNG", 14, 5, 12, 12);
 
