@@ -206,10 +206,36 @@ export default function HistoryPage() {
     doc.text(`Winrate : ${winrate}%`, 14, 67);
 
     autoTable(doc, {
-      startY: 80,
+      willDrawPage: () => {
+        doc.setFillColor(0, 0, 0);
+
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.getWidth(),
+          doc.internal.pageSize.getHeight(),
+          "F",
+        );
+
+        doc.setTextColor(255, 215, 0);
+
+        doc.setFontSize(20);
+
+        doc.text("RISE HISTORY RECAP", 14, 15);
+      },
+      startY: 25,
 
       head: [
-        ["Date", "Emiten", "Type", "AVG", "Timeline", "TP", "Profit", "Status"],
+        [
+          "Date",
+          "Emiten",
+          "Type",
+          "AVG",
+          "Timeline",
+          "TP1/TP2/TP3",
+          "Profit",
+          "Status",
+        ],
       ],
 
       body: filteredSignals.map((signal) => [
