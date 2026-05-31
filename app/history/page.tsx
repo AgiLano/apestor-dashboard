@@ -201,23 +201,33 @@ export default function HistoryPage() {
 
     doc.text(`Winrate : ${winrate}%`, 14, 67);
 
+    doc.setFillColor(0, 0, 0);
+
+    doc.rect(
+      0,
+      0,
+      doc.internal.pageSize.getWidth(),
+      doc.internal.pageSize.getHeight(),
+      "F",
+    );
+
     autoTable(doc, {
       willDrawPage: (data) => {
-        doc.setFillColor(0, 0, 0);
-
-        doc.rect(
-          0,
-          0,
-          doc.internal.pageSize.getWidth(),
-          doc.internal.pageSize.getHeight(),
-          "F",
-        );
-
         try {
           doc.addImage(logo, "PNG", 65, 105, 50, 50);
         } catch (e) {}
 
         if (data.pageNumber > 1) {
+          doc.setFillColor(0, 0, 0);
+
+          doc.rect(
+            0,
+            0,
+            doc.internal.pageSize.getWidth(),
+            doc.internal.pageSize.getHeight(),
+            "F",
+          );
+
           doc.addImage(logo, "PNG", 14, 5, 12, 12);
 
           doc.setTextColor(255, 215, 0);
