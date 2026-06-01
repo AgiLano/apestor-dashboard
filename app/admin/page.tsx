@@ -77,6 +77,14 @@ export default function AdminPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [mode, setMode] = useState<"SIGNAL" | "WATCHLIST">("SIGNAL");
+
+  const [watchlistTitle, setWatchlistTitle] = useState("");
+
+  const [watchlistStocks, setWatchlistStocks] = useState("");
+
+  const [watchlistNotes, setWatchlistNotes] = useState("");
+
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const currentTime = new Date().toLocaleTimeString("id-ID", {
@@ -481,6 +489,30 @@ Entry 3 : ${entry3 || "-"}`,
               LOGOUT
             </button>
           </div>
+        </div>
+
+        <div className="flex gap-3 mb-6">
+          <button
+            onClick={() => setMode("SIGNAL")}
+            className={`px-6 py-3 rounded-2xl font-bold transition-all ${
+              mode === "SIGNAL"
+                ? "bg-amber-300 text-black"
+                : "bg-zinc-900 text-zinc-400 border border-white/5"
+            }`}
+          >
+            📈 SIGNAL
+          </button>
+
+          <button
+            onClick={() => setMode("WATCHLIST")}
+            className={`px-6 py-3 rounded-2xl font-bold transition-all ${
+              mode === "WATCHLIST"
+                ? "bg-cyan-400 text-black"
+                : "bg-zinc-900 text-zinc-400 border border-white/5"
+            }`}
+          >
+            👀 WATCHLIST
+          </button>
         </div>
 
         {/* FORM */}
