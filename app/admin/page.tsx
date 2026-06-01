@@ -180,6 +180,28 @@ export default function AdminPage() {
   }, []);
 
   // =========================
+  // HELPER
+  // =========================
+
+  function getTick(price: number) {
+    if (price >= 50 && price < 200) return 1;
+
+    if (price >= 200 && price < 500) return 2;
+
+    if (price >= 500 && price < 2000) return 5;
+
+    if (price >= 2000 && price < 5000) return 10;
+
+    return 25;
+  }
+
+  function roundToTick(price: number) {
+    const tick = getTick(price);
+
+    return Math.ceil(price / tick) * tick;
+  }
+
+  // =========================
   // AUTO AVG
   // =========================
 
@@ -200,6 +222,27 @@ export default function AdminPage() {
       setAvg("");
     }
   }, [entry1, entry2, entry3]);
+
+  // =========================
+  // AUTO TP1 (3%)
+  // =========================
+
+  useEffect(() => {
+    if (!avg) {
+      setTp1("");
+      return;
+    }
+
+    const avgPrice = Number(avg);
+
+    const target3Percent = avgPrice * 1.03;
+
+    const finalTp1 = roundToTick(target3Percent);
+
+    if (!tp1) {
+      setTp1(finalTp1.toString());
+    }
+  }, [avg]);
 
   // =========================
   // AUTO PROFIT
