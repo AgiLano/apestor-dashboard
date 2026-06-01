@@ -389,13 +389,58 @@ Entry 3 : ${entry3 || "-"}`,
   }
 
   async function sendWatchlist() {
-    console.log("WATCHLIST");
+    if (!watchlistTitle || !watchlistStocks) {
+      alert("Lengkapi watchlist terlebih dahulu!");
+      return;
+    }
 
-    console.log(watchlistTitle);
+    const stocks = watchlistStocks
+      .split("\n")
+      .filter(Boolean)
+      .map((stock) => `• ${stock}`)
+      .join("\n");
 
-    console.log(watchlistStocks);
+    const response = await fetch("/api/discord", {
+      method: "POST",
 
-    console.log(watchlistNotes);
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        channel: "PANTAU",
+
+        embed: {
+          title: `👀 ${watchlistTitle}`,
+
+          color: 0x06b6d4,
+
+          description: `
+📌 WATCHLIST HARI INI
+
+${stocks}
+
+📝 Catatan
+
+${watchlistNotes || "-"}
+
+🔥 RITEL SOCIETY
+`,
+        },
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert("Watchlist berhasil dikirim!");
+
+      setWatchlistTitle("");
+      setWatchlistStocks("");
+      setWatchlistNotes("");
+    } else {
+      alert("Gagal mengirim watchlist!");
+    }
   }
 
   // =========================

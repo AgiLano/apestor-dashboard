@@ -14,6 +14,10 @@ export async function POST(req: Request) {
       webhook = process.env.DISCORD_WEBHOOK_DONE;
     }
 
+    if (body.channel === "PANTAU") {
+      webhook = process.env.DISCORD_WEBHOOK_PANTAU;
+    }
+
     if (!webhook) {
       return NextResponse.json(
         {
