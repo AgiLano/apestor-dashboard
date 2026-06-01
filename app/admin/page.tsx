@@ -922,9 +922,11 @@ shadow-amber-300/10
           >
             {loading
               ? "MENYIMPAN..."
-              : editingId
-                ? "UPDATE SIGNAL"
-                : "SIMPAN SIGNAL"}
+              : mode === "WATCHLIST"
+                ? "🚀 KIRIM WATCHLIST"
+                : editingId
+                  ? "UPDATE SIGNAL"
+                  : "SIMPAN SIGNAL"}
           </button>
         </div>
         {/* FILTER */}
