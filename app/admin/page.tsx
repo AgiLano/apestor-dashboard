@@ -878,7 +878,7 @@ ${watchlistNotes || "-"}
         {mode === "WATCHLIST" && (
           <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/5 rounded-3xl p-8">
             <h2 className="text-3xl font-black text-cyan-400 mb-6">
-              WATCHLIST HARI INI
+              WATCHLIST
             </h2>
 
             <input
