@@ -387,6 +387,17 @@ Entry 3 : ${entry3 || "-"}`,
 
     setProfitPercentage("");
   }
+
+  async function sendWatchlist() {
+    console.log("WATCHLIST");
+
+    console.log(watchlistTitle);
+
+    console.log(watchlistStocks);
+
+    console.log(watchlistNotes);
+  }
+
   // =========================
   // DELETE SIGNAL
   // =========================
@@ -902,8 +913,7 @@ text-lg
           )}
 
           <button
-            onClick={saveSignal}
-            disabled={loading}
+            onClick={mode === "WATCHLIST" ? sendWatchlist : saveSignal}
             className="
 w-full
 bg-amber-300
