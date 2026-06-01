@@ -890,12 +890,7 @@ ${watchlistNotes || "-"}
             />
 
             <textarea
-              placeholder="Daftar emiten...
-Contoh:
-ENRG
-BNBR
-BRMS
-MEDS"
+              placeholder="Daftar emiten..."
               value={watchlistStocks}
               onChange={(e) => setWatchlistStocks(e.target.value)}
               rows={8}
@@ -903,7 +898,7 @@ MEDS"
             />
 
             <textarea
-              placeholder="Catatan Mentor..."
+              placeholder="Catatan..."
               value={watchlistNotes}
               onChange={(e) => setWatchlistNotes(e.target.value)}
               rows={4}
