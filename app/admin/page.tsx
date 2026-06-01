@@ -239,6 +239,12 @@ export default function AdminPage() {
 
     const finalTp1 = roundToTick(target3Percent);
 
+    console.log("AVG =", avg);
+
+    console.log("3% =", target3Percent);
+
+    console.log("FINAL TP =", finalTp1);
+
     if (!tp1) {
       setTp1(finalTp1.toString());
     }
