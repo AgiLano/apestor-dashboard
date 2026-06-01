@@ -416,7 +416,7 @@ Entry 3 : ${entry3 || "-"}`,
           color: 0x06b6d4,
 
           description: `
-📌 WATCHLIST HARI INI
+📌 WATCHLIST
 
 ${stocks}
 
