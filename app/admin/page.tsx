@@ -77,6 +77,8 @@ export default function AdminPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [sendDiscord, setSendDiscord] = useState(true);
+
   const [mode, setMode] = useState<"SIGNAL" | "WATCHLIST">("SIGNAL");
 
   const [watchlistTitle, setWatchlistTitle] = useState("");
@@ -357,61 +359,63 @@ export default function AdminPage() {
       editingId ? "Signal berhasil diupdate!" : "Signal berhasil disimpan!",
     );
 
-    await fetch("/api/discord", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        channel: editingId ? "ARAHAN" : "REKOM",
+    if (sendDiscord) {
+      await fetch("/api/discord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          channel: editingId ? "ARAHAN" : "REKOM",
 
-        embed: {
-          title: editingId ? "✏️ SIGNAL UPDATE RISE" : "🚀 SIGNAL BARU RISE",
+          embed: {
+            title: editingId ? "✏️ SIGNAL UPDATE RISE" : "🚀 SIGNAL BARU RISE",
 
-          color: editingId ? 0xf59e0b : 0xeab308,
+            color: editingId ? 0xf59e0b : 0xeab308,
 
-          fields: [
-            {
-              name: "📈 Emiten",
-              value: emiten,
-              inline: true,
-            },
-            {
-              name: "📊 Strategy",
-              value: tradingType,
-              inline: true,
-            },
-            {
-              name: "📍 Status",
-              value: status,
-              inline: true,
-            },
-            {
-              name: "💰 Entry Area",
-              value: `Entry 1 : ${entry1 || "-"}
+            fields: [
+              {
+                name: "📈 Emiten",
+                value: emiten,
+                inline: true,
+              },
+              {
+                name: "📊 Strategy",
+                value: tradingType,
+                inline: true,
+              },
+              {
+                name: "📍 Status",
+                value: status,
+                inline: true,
+              },
+              {
+                name: "💰 Entry Area",
+                value: `Entry 1 : ${entry1 || "-"}
 Entry 2 : ${entry2 || "-"}
 Entry 3 : ${entry3 || "-"}`,
-              inline: false,
-            },
-            {
-              name: "📌 AVG",
-              value: avg || "-",
-              inline: true,
-            },
-            {
-              name: "🎯 Target",
-              value: `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`,
-              inline: true,
-            },
-            {
-              name: "🕒 Waktu",
-              value: `${currentTime} WIB`,
-              inline: true,
-            },
-          ],
-        },
-      }),
-    });
+                inline: false,
+              },
+              {
+                name: "📌 AVG",
+                value: avg || "-",
+                inline: true,
+              },
+              {
+                name: "🎯 Target",
+                value: `${tp1 || "-"} | ${tp2 || "-"} | ${tp3 || "-"}`,
+                inline: true,
+              },
+              {
+                name: "🕒 Waktu",
+                value: `${currentTime} WIB`,
+                inline: true,
+              },
+            ],
+          },
+        }),
+      });
+    }
 
     setEmiten("");
     setTradingType("");
@@ -778,6 +782,19 @@ ${watchlistNotes || "-"}
                   DONE
                 </option>
               </select>
+
+              <div className="flex items-center gap-3 mt-2">
+                <input
+                  type="checkbox"
+                  checked={sendDiscord}
+                  onChange={(e) => setSendDiscord(e.target.checked)}
+                  className="w-5 h-5"
+                />
+
+                <label className="text-zinc-300 font-medium">
+                  Kirim ke Discord
+                </label>
+              </div>
 
               {status === "DONE" && (
                 <DatePicker
